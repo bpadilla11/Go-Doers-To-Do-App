@@ -1,0 +1,26 @@
+#logo {
+	margin-left: 10%;
+}
+
+
+#hamburger{
+	display: flex;
+}
+
+
+.btf-content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    
+}
+}
+
+.btf-content article {
+    width: 30%;
+}
+
+html, body, #atf {
+    height: auto;
+}

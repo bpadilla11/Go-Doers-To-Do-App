@@ -73,5 +73,5 @@
                     <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
         </footer>
     </body>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 </html>

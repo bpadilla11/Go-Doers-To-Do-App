@@ -1,0 +1,296 @@
+* {
+   /* border: 1px solid green; */
+}
+
+html {
+    /* size of fonts inside the html tag unless override */
+    font-size: 62.5%;
+}
+
+
+html, body, header, main, section, article, footer, a, ul, li, h1, h2, h3, p{
+    /* simple reset - resets browser's default styling */
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+a {
+    /* remove underline on hyperlinks */
+    text-decoration: none;
+}
+
+
+li {
+    /* remove bullets on lists */
+    list-style: none;
+}
+
+
+input { 
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 7px;
+}
+
+
+/* these elements will take up the whole page above the fold */
+
+
+
+#atf {
+    display: flex;
+    flex-direction: column;
+}
+
+
+header {
+    font-family: sans-serif;
+    color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 6rem;
+    background-color: #f5f5f5;
+    flex-grow: 1;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+
+#navbar {
+    height: 100%;
+
+    /* make a large touch target */
+    /* expand the element to fill width
+    along primary axis ( horizontally ) */
+    flex-grow: 2;
+
+    font-size: 2rem;
+
+    /* center text */
+    display: flex;
+    align-items: center;
+}
+
+
+#logo {
+
+    /* make a large touch target */
+    /* expand the element to fill height */
+    height: 100%;
+
+    /* make a large touch target */
+    /* expand the element to fill width
+    along primary axis ( horizontally ) */
+    /* also seperates logo with hamburger menu */
+    flex-grow: 1;
+
+    /* font styling */
+    color: #333;
+    font-size: 2rem;
+    letter-spacing: 1px;
+
+    /* center text */
+    display: flex;
+    align-items: center;
+    margin-right: 10%;
+    margin-left: 20%;
+}
+
+/* change the logo's text color when mouse hover's over it */
+#logo a:hover {
+    color: #0266C8;
+}
+
+
+
+.nd{
+    display: none;
+    white-space: nowrap;
+}
+
+
+#hamburger {
+    padding: 5px;
+    color: white;
+    background-color: black;
+    border: 1px solid black;
+    border-radius: 2px;
+    margin-right: 20%;
+}
+
+#hamburger:hover{
+    cursor: pointer;
+    background-color: gray;
+}
+
+
+#dropdown-form {
+    background-color: white;
+    padding: 10px;
+    z-index: 10000;
+    flex-direction: column;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+/* MOBILE MENU ON BOTTOM */
+/* nav mobile (nm) */
+
+.nm {
+    display: flex;
+    flex-direction: column;
+}
+
+
+#center {
+    flex-grow: 1;
+    margin-top: 100px;
+   
+}
+
+
+/* CALL TO ACTION (cta) */
+#center-content {
+
+    /* set the height of the cta container */
+    height: auto;
+    font-size: 1.6rem;
+    margin-right: 20%;
+    margin-left: 20%;
+    /* set the color of the cta container */
+    background-color: #f5f5f5;
+
+    /* center text and button containers */
+    /*      #cta-txt, #cta-btn */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#center-content h1 {
+      text-align: left;
+}
+
+#center-content-txt {
+
+    /* format text */
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+
+    letter-spacing: 2px;
+    color: #333;
+     
+    /* center text old fashioned-way */
+  
+}
+
+#register-btn{
+
+    /* button's width */
+    width: 20rem;
+
+    /* button's height */
+    height: 5rem;
+    margin: 1.3rem 0;
+
+    /* format text */
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    line-height: 1;
+
+    /* format button */
+    background-color: #333;
+    border-radius: 5px;
+
+    /* center child anchor element */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#register-btn a {
+
+    /* make a large touch target */
+    /* expand the anchor element to fill height */
+    height: 100%;
+
+    /* make a large touch target */
+    /* expand the anchor element to fill width along primary axis ( horizontally ) */
+    flex-grow: 1;
+
+    /* format font */
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 300;
+
+    /* format anchor dimsions match the containing h2 element #cta-btn */
+    border-radius: 5px;
+
+    /* center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#register-btn a:hover {
+    background-color: #0ebfe9;
+}
+
+/* ------------------------------------------- */
+/* BELOW THE FOLD (btf) */
+/* ------------------------------------------- */
+
+/* create flex containers for
+        images
+        articles
+*/
+.btf-content {
+    display: flex;
+}
+
+/* articles */
+.btf-content article {
+    padding: 10px;
+}
+
+.btf-content h3 {
+    /* font format */
+    font-family: 'Roboto Slab', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+}
+
+.btf-content p {
+    /* font format */
+    font-family: 'Roboto Slab', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+
+footer {
+    height: 70px;
+    background-color: #333;
+
+    /* flex container to hold content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer p {
+    color: #999;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+
+

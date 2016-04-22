@@ -1,0 +1,28 @@
+/* nd = nav desktop */
+.nd {
+    /* arrange li elements horizontally */
+    display: flex;
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    margin-right: 10%;
+}
+
+
+#hamburger{
+    display: none;
+}
+
+
+#dropdown-form {
+    display: none !important;
+}
+
+
+#center-content {
+    margin: 10%;
+}
+
+html, body, #atf {
+    height: 100%;
+}
+
