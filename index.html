@@ -19,9 +19,12 @@
 
     <body>
         <!-- atf in main.css; styles atf to display its contents full page in the browser -->
+        <!-- atf, body, html height changes from auto -> 100% and vice versa depending on the width and height
+             of the browser defined by the media queries -->
         <div id="atf">
 
             <header>
+                <!-- navbar contains the logo and the sign in inputs  -->
                 <div id="navbar">
                     <div id="logo"><a href="#" >ToDo's&Dont's</a></div>
                     <form method="POST" class="nd">
@@ -29,9 +32,11 @@
                         <input type="password" name="password" placeholder="Password" required>
                         <button class="btn" type="submit">Sign In</button>
                     </form>
+                    <!-- hamburger only shows up when the width of the screen is < 800px -->
                     <a id="hamburger" onclick="show_nm();">&#9776;</a>
                 </div>
-                <!-- dropdown-form display MUST be none -->
+                <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
+                     dropdown-form can only be accessed if the screen width is below 800px -->
                 <div id="dropdown-form" style="display: none;">
                     <form class="nm">
                         <input type="text" placeholder="Email" required>
@@ -42,8 +47,8 @@
                 </div>
             </header>
             
+            <!--  -->
             <div id="center">
-                <!-- call to action (cta) -->
                 <section id="center-content">
                     <h1 id="center-content-title">ToDo's&Dont's</h1>
                     <h1 id="center-content-txt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fringilla, arcu quis consequat laoreet, nulla elit tincidunt diam, sed aliquam diam arcu eget risus. Donec et justo erat. Nullam lectus ligula, scelerisque sit amet porta sit amet, posuere in orci. In ullamcorper augue vitae egestas aliquet. Aenean ornare hendrerit ipsum ac aliquet. In mi ligula, pretium eu mollis a, hendrerit sed augue. Curabitur tortor massa, sodales quis viverra et, suscipit quis magna. In risus ligula, semper at leo ac, pellentesque hendrerit tortor. Donec aliquam, felis quis vulputate mollis, nulla orci faucibus ipsum, sed bibendum augue ipsum eget lacus. Cras mattis euismod elementum.</h1>
@@ -51,7 +56,8 @@
                 </section>
             </div>
         </div>
-<!-- articles -->
+
+        <!-- content below the fold  -->
         <section class="btf-content">
             <article>
                 <h3>ToDo1</h3>
@@ -69,9 +75,10 @@
             </article>
 
         </section>
+        <!--  -->
         <footer>
-                    <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
-                    <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
+            <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
+            <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
         </footer>
     </body>
     <script type="text/javascript" src="js/main.js"></script>
