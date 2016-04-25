@@ -1,0 +1,19 @@
+/* show hamburger: yummmmmm */
+#hamburger{
+	display: flex;
+}
+
+
+.btf-content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around; 
+}
+
+
+/* making this auto means removing above the fold design */
+/* auto to prevent element from overlapping */
+html, body, #atf {
+    height: auto;
+}

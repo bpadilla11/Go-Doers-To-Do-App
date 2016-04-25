@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Specify the character encoding for the HTML document:-->
         <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--A <meta> viewport element gives the browser instructions on how to control the page's dimensions and scaling.
+            The width=device-width part sets the width of the page to follow the screen-width of the device (which will 
+                vary depending on the device).
+            The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>ToDo's&Dont's</title>
+        <!-- main.css is let's say the base css. always applies to the index.html -->
         <link rel="stylesheet" href="css/main.css">
         
-        <link rel="stylesheet" media="screen and (min-height: 800px)" href="css/1.css">
-        <link rel="stylesheet" media="screen and (max-width: 800px)" href="css/mq_500-less_images.css">
-        <link rel="stylesheet" media="screen and (min-height: 800px) and (max-width: 800px)" href="css/mq_500-less_images.css">
-        <link rel="stylesheet" media="screen and (max-height: 801px)" href="css/less_600y.css">
+        <!-- There are a lot of media queries here to accomodate not just the screen width but also the height -->
+        <!-- this is applied when screen width is < 800px -->
+        <link rel="stylesheet" media="screen and (max-width: 800px)" href="css/mq_800-less.css">
+        <!-- this is applied when height is > 600px and width is < 800px -->
+        <link rel="stylesheet" media="screen and (min-height: 600px) and (max-width: 800px)" href="css/mq_800-less.css">
+        <!-- this is applied when width > 801px -->
         <link rel="stylesheet" media="screen and (min-width: 801px)" href="css/mq_800-plus.css">
-        <link rel="stylesheet" media="screen and (max-height: 625px) and (min-width: 900px)" href="css/less_600y.css">
-
-        
-
+        <!-- this is applied when height < 600px without worrying about width -->
+        <link rel="stylesheet" media="screen and (max-height: 601px)" href="css/mq_less_600y.css">
     </head>
 
     <body>
@@ -38,7 +44,7 @@
                 <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
                      dropdown-form can only be accessed if the screen width is below 800px -->
                 <div id="dropdown-form" style="display: none;">
-                    <form class="nm">
+                    <form>
                         <input type="text" placeholder="Email" required>
                         <input type="password" placeholder="Password" required>
                         <button class="btn" type="submit">Sign In</button>
@@ -47,7 +53,7 @@
                 </div>
             </header>
             
-            <!--  -->
+            <!-- center as it says the center content of the page -->
             <div id="center">
                 <section id="center-content">
                     <h1 id="center-content-title">ToDo's&Dont's</h1>
@@ -57,7 +63,7 @@
             </div>
         </div>
 
-        <!-- content below the fold  -->
+        <!-- content below the fold; shows below atf-->
         <section class="btf-content">
             <article>
                 <h3>ToDo1</h3>
@@ -75,7 +81,7 @@
             </article>
 
         </section>
-        <!--  -->
+        <!-- footer content: contains our names and some dummy links -->
         <footer>
             <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
             <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
@@ -83,3 +89,5 @@
     </body>
     <script type="text/javascript" src="js/main.js"></script>
 </html>
+
+<!-- in less600 kinda... needs to set height of atf to 100% instead of auto-->

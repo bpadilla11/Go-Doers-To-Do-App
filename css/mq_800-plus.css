@@ -1,22 +1,22 @@
-/* nd = nav desktop */
+/* show sign in form in navbar */
 .nd {
-    /* arrange li elements horizontally */
-    display: flex;
-    letter-spacing: 1px;
-    font-family: sans-serif;
-    margin-right: 10%;
+    display: flex; 
 }
 
 
+/* hide the hamburger: owwwwww */
 #hamburger{
     display: none;
 }
 
 
+/* make sure that dropdown-form is not shown when we have high resol */
 #dropdown-form {
     display: none !important;
 }
 
+
+/* high resol then use above the fold design */
 html, body, #atf {
     height: 100%;
 }
