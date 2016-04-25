@@ -5,6 +5,7 @@
 
 #hamburger{
 	display: flex;
+	margin-right: 10%;
 }
 
 
@@ -15,7 +16,7 @@
     justify-content: space-around;
     
 }
-}
+
 
 .btf-content article {
     width: 30%;

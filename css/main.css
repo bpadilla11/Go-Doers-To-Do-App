@@ -8,7 +8,7 @@ html {
 }
 
 
-html, body, header, main, section, article, footer, a, ul, li, h1, h2, h3, p{
+html, body, header, section, article, footer, a, div, ul, li, h1, h2, h3, p{
     /* simple reset - resets browser's default styling */
     padding: 0;
     margin: 0;
@@ -32,6 +32,7 @@ input {
     border-radius: 5px;
     font-size: 15px;
     padding: 7px;
+    margin: 1px;
 }
 
 
@@ -51,7 +52,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 6rem;
+    height: 60px;
     background-color: #f5f5f5;
     flex-grow: 1;
     border-bottom: 1px solid rgba(0,0,0,0.3);
@@ -95,12 +96,17 @@ header {
     display: flex;
     align-items: center;
     margin-right: 10%;
-    margin-left: 20%;
+    margin-left: 10%;
+}
+
+#logo a{
+        color: black;
 }
 
 /* change the logo's text color when mouse hover's over it */
 #logo a:hover {
-    color: #0266C8;
+    color: #0ebfe9;
+    transition: 0.5s ease;
 }
 
 
@@ -112,27 +118,50 @@ header {
 
 
 #hamburger {
-    padding: 5px;
+    padding: 10px;
     color: white;
-    background-color: black;
-    border: 1px solid black;
+    background-color: #333;
+    
     border-radius: 2px;
     margin-right: 20%;
 }
 
 #hamburger:hover{
     cursor: pointer;
-    background-color: gray;
+    background-color: #0ebfe9;
+    transition: 0.5s ease;
 }
 
 
 #dropdown-form {
-    background-color: white;
-    padding: 10px;
+    background: rgba(51,51,51, 0.7);
+    padding: 20px;
     z-index: 10000;
     flex-direction: column;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    transition: visibility 10s, opacity 0.5s linear;
+    border-top: 2px solid black;
+}
+
+.btn {
+    padding: 6px 12px;
+    background-color: #333;
+    margin: 1px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+}
+
+.btn:hover{
+    background-color: #0ebfe9;
+    transition: 0.5s ease;
 }
 
 
@@ -147,7 +176,7 @@ header {
 
 #center {
     flex-grow: 1;
-    margin-top: 100px;
+    margin-top: 70px;
    
 }
 
@@ -158,28 +187,34 @@ header {
     /* set the height of the cta container */
     height: auto;
     font-size: 1.6rem;
-    margin-right: 20%;
-    margin-left: 20%;
+
     /* set the color of the cta container */
     background-color: #f5f5f5;
-
+    padding: 20px;
     /* center text and button containers */
     /*      #cta-txt, #cta-btn */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    font-family: sans-serif;
 }
 
 #center-content h1 {
       text-align: left;
+      margin-right: 10%;
+      margin-left: 10%;
+
+}
+
+#center-content-title{
+    font-size: 50px;
+    font-weight: 300;
 }
 
 #center-content-txt {
-
     /* format text */
-    font-family: 'Roboto Slab', serif;
+   
     font-weight: 300;
 
     letter-spacing: 2px;
@@ -199,7 +234,6 @@ header {
     margin: 1.3rem 0;
 
     /* format text */
-    font-family: 'Roboto Slab', serif;
     font-weight: 300;
     line-height: 1;
 
@@ -214,7 +248,7 @@ header {
 }
 
 #register-btn a {
-
+    font-family: sans-serif;
     /* make a large touch target */
     /* expand the anchor element to fill height */
     height: 100%;
@@ -239,6 +273,7 @@ header {
 
 #register-btn a:hover {
     background-color: #0ebfe9;
+    transition: 0.5s ease;
 }
 
 /* ------------------------------------------- */
@@ -260,14 +295,14 @@ header {
 
 .btf-content h3 {
     /* font format */
-    font-family: 'Roboto Slab', sans-serif;
+    font-family: sans-serif;
     font-size: 2.4rem;
     font-weight: 400;
 }
 
 .btf-content p {
     /* font format */
-    font-family: 'Roboto Slab', sans-serif;
+    font-family: sans-serif;
     font-size: 1.6rem;
     font-weight: 300;
 }
@@ -275,22 +310,28 @@ header {
 
 footer {
     height: 70px;
-    background-color: #333;
+    background-color: #333; 
+    padding: 10px;
+}
 
-    /* flex container to hold content */
+footer p {
+    color: #999;
+    font-family: sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-footer p {
+footer p a{
+    text-decoration: none;
     color: #999;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-    text-align: center;
+    padding: 5px;
 }
 
 
-
-
+footer p a:hover{
+    color: #0ebfe9;
+}
