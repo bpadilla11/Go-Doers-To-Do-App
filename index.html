@@ -11,6 +11,7 @@
         <title>ToDo's&Dont's</title>
         <!-- main.css is let's say the base css. always applies to the index.html -->
         <link rel="stylesheet" href="css/main.css">
+        <script type="text/javascript" src="js/main.js"></script>
         
         <!-- There are a lot of media queries here to accomodate not just the screen width but also the height -->
         <!-- this is applied when screen width is < 800px -->
@@ -36,10 +37,10 @@
                     <form method="POST" class="nd">
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
-                        <button class="btn" type="submit">Sign In</button>
+                        <input class="btn" type="submit" value="Login">
                     </form>
                     <!-- hamburger only shows up when the width of the screen is < 800px -->
-                    <a id="hamburger" onclick="show_nm();">&#9776;</a>
+                    <a id="hamburger" onclick="show_nm();"><svg height="25px" id="Layer_1" style="enable-background:new 0 0 32 32;" version="1.1" viewBox="0 0 32 32" width="25px" xml:space="preserve" fill="#EBEBEB" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg></a>
                 </div>
                 <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
                      dropdown-form can only be accessed if the screen width is below 800px -->
@@ -47,8 +48,8 @@
                     <form>
                         <input type="text" placeholder="Email" required>
                         <input type="password" placeholder="Password" required>
-                        <button class="btn" type="submit">Sign In</button>
-                        <a class="btn" href="#">Register</a>
+                        <input class="btn" type="submit" value="Login">
+                        <a class="btn" href="/register">Register</a>
                     </form>
                 </div>
             </header>
@@ -58,7 +59,7 @@
                 <section id="center-content">
                     <h1 id="center-content-title">ToDo's&Dont's</h1>
                     <h1 id="center-content-txt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fringilla, arcu quis consequat laoreet, nulla elit tincidunt diam, sed aliquam diam arcu eget risus. Donec et justo erat. Nullam lectus ligula, scelerisque sit amet porta sit amet, posuere in orci. In ullamcorper augue vitae egestas aliquet. Aenean ornare hendrerit ipsum ac aliquet. In mi ligula, pretium eu mollis a, hendrerit sed augue. Curabitur tortor massa, sodales quis viverra et, suscipit quis magna. In risus ligula, semper at leo ac, pellentesque hendrerit tortor. Donec aliquam, felis quis vulputate mollis, nulla orci faucibus ipsum, sed bibendum augue ipsum eget lacus. Cras mattis euismod elementum.</h1>
-                    <h2 id="register-btn"><a href="#">Get Started!</a></h2>
+                    <h2 id="register-btn"><a href="/register">Get Started!</a></h2>
                 </section>
             </div>
         </div>
@@ -87,7 +88,6 @@
             <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
         </footer>
     </body>
-    <script type="text/javascript" src="js/main.js"></script>
 </html>
 
 <!-- in less600 kinda... needs to set height of atf to 100% instead of auto-->
