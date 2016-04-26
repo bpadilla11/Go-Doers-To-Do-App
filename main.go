@@ -15,7 +15,7 @@ import (
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(tpl.ParseGlob("*.html"))
+	tpl = template.Must(tpl.ParseGlob("template/*.html"))
 
 	r := mux.NewRouter()
 	http.Handle("/", r)

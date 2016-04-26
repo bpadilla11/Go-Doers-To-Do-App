@@ -10,18 +10,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>ToDo's&Dont's</title>
         <!-- main.css is let's say the base css. always applies to the index.html -->
-        <link rel="stylesheet" href="css/main.css">
-        <script type="text/javascript" src="js/main.js"></script>
+        <link rel="stylesheet" href="../css/main.css">
+        <script type="text/javascript" src="../js/main.js"></script>
         
         <!-- There are a lot of media queries here to accomodate not just the screen width but also the height -->
-        <!-- this is applied when screen width is < 800px -->
-        <link rel="stylesheet" media="screen and (max-width: 800px)" href="css/mq_800-less.css">
-        <!-- this is applied when height is > 600px and width is < 800px -->
-        <link rel="stylesheet" media="screen and (min-height: 600px) and (max-width: 800px)" href="css/mq_800-less.css">
-        <!-- this is applied when width > 801px -->
-        <link rel="stylesheet" media="screen and (min-width: 801px)" href="css/mq_800-plus.css">
+        <!-- this is applied when screen width is < 768px -->
+        <link rel="stylesheet" media="screen and (max-width: 767px)" href="../css/mq_768-less.css">
+        <!-- this is applied when height is > 600px and width is < 768px -->
+        <link rel="stylesheet" media="screen and (min-height: 600px) and (max-width: 767px)" href="../css/mq_768-less.css">
+        <!-- this is applied when width > 768px -->
+        <link rel="stylesheet" media="screen and (min-width: 768px)" href="../css/mq_768-plus.css">
         <!-- this is applied when height < 600px without worrying about width -->
-        <link rel="stylesheet" media="screen and (max-height: 601px)" href="css/mq_less_600y.css">
+        <link rel="stylesheet" media="screen and (max-height: 600px)" href="../css/mq_less_600y.css">
     </head>
 
     <body>
@@ -33,14 +33,15 @@
             <header>
                 <!-- navbar contains the logo and the sign in inputs  -->
                 <div id="navbar">
-                    <div id="logo"><a href="#" >ToDo's&Dont's</a></div>
+                    <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
                     <form method="POST" class="nd">
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
                         <input class="btn" type="submit" value="Login">
                     </form>
-                    <!-- hamburger only shows up when the width of the screen is < 800px -->
-                    <a id="hamburger" onclick="show_nm();"><svg height="25px" id="Layer_1" style="enable-background:new 0 0 32 32;" version="1.1" viewBox="0 0 32 32" width="25px" xml:space="preserve" fill="#EBEBEB" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg></a>
+                    <!-- hamburger only shows up when the width of the screen is < 768px -->
+                    <!-- inline svg for extra credit -->
+                    <svg id="hamburger" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onclick="show_dropdown_form();" ><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg>
                 </div>
                 <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
                      dropdown-form can only be accessed if the screen width is below 800px -->
