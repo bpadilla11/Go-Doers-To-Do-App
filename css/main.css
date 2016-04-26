@@ -178,7 +178,9 @@ header {
 #center {
     flex-grow: 1;
     margin-top: 70px;
-   
+    max-width: 50%;
+    background-color: grey;
+    overflow-y: scroll;
 }
 
 
