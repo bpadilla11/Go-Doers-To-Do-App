@@ -197,73 +197,6 @@ header {
 }
 
 
-#center {
-    flex-grow: 1;  
-}
-
-
-/* ------------------------------------------- */
-/* BELOW THE FOLD (btf) */
-/* ------------------------------------------- */
-.btf-content {
-    display: flex; /* for later use */
-}
-
-/* articles */
-.btf-content article {
-    padding: 10px;
-}
-
-/* article title */
-.btf-content h3 {
-    /* font format */
-    font-family: sans-serif;
-    font-size: 2.4rem;
-    font-weight: 400;
-}
-
-/*article content */
-.btf-content p {
-    /* font format */
-    font-family: sans-serif;
-    font-size: 1.6rem;
-    font-weight: 300;
-}
-
-
-/* as it says */
-footer {
-    height: 70px;
-    background-color: #333; 
-    padding: 10px;
-}
-
-
-/* team member names*/
-footer p {
-    color: #999;
-    font-family: sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* dummy links in footer */
-footer p a{
-    text-decoration: none;
-    color: #999;
-    padding: 5px;
-}
-
-
-footer p a:hover{
-    color: #0ebfe9;
-}
-
-
 #cta {
 
     /* set the height of the cta container */
@@ -348,4 +281,66 @@ footer p a:hover{
 
 #cta-btn a:hover {
     background-color: #0ebfe9;
+}
+
+
+/* ------------------------------------------- */
+/* BELOW THE FOLD (btf) */
+/* ------------------------------------------- */
+.btf-content {
+    display: flex; /* for later use */
+}
+
+/* articles */
+.btf-content article {
+    padding: 10px;
+}
+
+/* article title */
+.btf-content h3 {
+    /* font format */
+    font-family: sans-serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+}
+
+/*article content */
+.btf-content p {
+    /* font format */
+    font-family: sans-serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+
+/* as it says */
+footer {
+    height: 70px;
+    background-color: #333; 
+    padding: 10px;
+}
+
+
+/* team member names*/
+footer p {
+    color: #999;
+    font-family: sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* dummy links in footer */
+footer p a{
+    text-decoration: none;
+    color: #999;
+    padding: 5px;
+}
+
+
+footer p a:hover{
+    color: #0ebfe9;
 }
