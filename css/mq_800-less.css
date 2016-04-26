@@ -11,6 +11,9 @@
     justify-content: space-around; 
 }
 
+#hero-img {
+    background-image: url("../img/logo-sml.png");
+}
 
 /* making this auto means removing above the fold design */
 /* auto to prevent element from overlapping */

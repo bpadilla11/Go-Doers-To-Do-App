@@ -46,6 +46,14 @@ input {
     flex-direction: column;
 }
 
+#hero-img {
+    background-color: #8e8e8e;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    /* grow the hero image to fill in unused space */
+    flex-grow: 1;
+}
 
 /* contains the navbar, hamburger menu and dropdown-form */
 header {
@@ -329,4 +337,86 @@ footer p a{
 
 footer p a:hover{
     color: #0ebfe9;
+}
+
+
+#cta {
+
+    /* set the height of the cta container */
+    height: 170px;
+
+    /* set the color of the cta container */
+    background-color: #f5f5f5;
+
+    /* center text and button containers */
+    /*      #cta-txt, #cta-btn */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-txt {
+
+    /* format text */
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    font-size: 3.5rem;
+    letter-spacing: 2px;
+    color: #333;
+
+    /* center text old fashioned-way */
+    text-align: center;
+}
+
+#cta-btn {
+
+    /* button's width */
+    width: 20rem;
+
+    /* button's height */
+    height: 5rem;
+    margin: 1.3rem 0;
+
+    /* format text */
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    line-height: 1;
+
+    /* format button */
+    background-color: #333;
+    border-radius: 5px;
+
+    /* center child anchor element */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-btn a {
+
+    /* make a large touch target */
+    /* expand the anchor element to fill height */
+    height: 100%;
+
+    /* make a large touch target */
+    /* expand the anchor element to fill width along primary axis ( horizontally ) */
+    flex-grow: 1;
+
+    /* format font */
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 300;
+
+    /* format anchor dimsions match the containing h2 element #cta-btn */
+    border-radius: 5px;
+
+    /* center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-btn a:hover {
+    background-color: #0ebfe9;
 }

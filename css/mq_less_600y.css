@@ -3,3 +3,7 @@
 html, body, #atf {
     height: auto;
 }
+
+#hero-img {
+    background-image: url("../img/logo-sml.png");
+}
