@@ -30,7 +30,9 @@ func init() {
 
 	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css"))))
 	http.Handle("/js/", http.StripPrefix("/js", http.FileServer(http.Dir("js"))))
+	http.Handle("/img/", http.StripPrefix("/img", http.FileServer(http.Dir("img"))))
 }
+
 
 
 func index(response http.ResponseWriter, request *http.Request) {
@@ -39,6 +41,7 @@ func index(response http.ResponseWriter, request *http.Request) {
 	}
 	tpl.ExecuteTemplate(response, "index.html", nil)
 }
+
 
 
 //login process
@@ -70,16 +73,22 @@ func login(response http.ResponseWriter, request *http.Request){
 	tpl.ExecuteTemplate(response, "index.html", nil)
 }
 
+
+
 func logout(response http.ResponseWriter, request *http.Request){
 
 }
+
+
 
 func dashboard(response http.ResponseWriter, request *http.Request){
 
 }
 
+
+
 func register(response http.ResponseWriter, request *http.Request){
-	ctx := appengine.NewContext(request)
+	/*ctx := appengine.NewContext(request)
 	
 	hashed_password, err := bcrypt.GenerateFromPassword([]byte("1234"), bcrypt.DefaultCost)
 	if err != nil {
@@ -115,26 +124,9 @@ func register(response http.ResponseWriter, request *http.Request){
 			//error
 		}
 	}*/
-	io.WriteString(response, user.Email)
+	//io.WriteString(response, user.Email)
 	tpl.ExecuteTemplate(response, "index.html", nil)
 }
 
 
 //go get github.com/gorilla/mux
-)
-
-
-func index(res http.ResponseWriter, request *http.Request)  {
-
-	tpl, _ := template.ParseFiles("index.html")
-	tpl.Execute(res, nil)
-}
-
-func main()  {
-	http.HandleFunc("/", index)
-	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css"))))
-	http.Handle("/js/", http.StripPrefix("/js", http.FileServer(http.Dir("js"))))
-	http.ListenAndServe(":8080", nil)
-
-
-}
