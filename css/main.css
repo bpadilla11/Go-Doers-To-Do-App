@@ -46,7 +46,8 @@ input {
     flex-direction: column;
 }
 
-#hero-img {
+#gopher-img {
+    margin-top: 70px;
     background-color: #8e8e8e;
     background-repeat: no-repeat;
     background-position: top center;
@@ -194,9 +195,7 @@ header {
 
 
 #center {
-    flex-grow: 1;
-    margin-top: 70px;
-   
+    flex-grow: 1;  
 }
 
 

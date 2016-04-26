@@ -1,9 +1,0 @@
-/* this is applied when height < 600px without worrying about width */
-/* auto so the btf content will not overlap with atf */
-html, body, #atf {
-    height: auto;
-}
-
-#hero-img {
-    background-image: url("../img/logo-sml.png");
-}
