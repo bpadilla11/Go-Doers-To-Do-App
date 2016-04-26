@@ -1,33 +1,35 @@
+/* debugging purposes */
 * {
    /* border: 1px solid green; */
 }
 
+ /* size of all fonts unless override */
 html {
-    /* size of fonts inside the html tag unless override */
     font-size: 62.5%;
 }
 
 
+/* simple reset - resets browser's default styling */
 html, body, header, section, article, footer, a, div, ul, li, h1, h2, h3, p{
-    /* simple reset - resets browser's default styling */
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
 
+ /* remove underline on hyperlinks */
 a {
-    /* remove underline on hyperlinks */
     text-decoration: none;
 }
 
 
+/* remove bullets on lists */
 li {
-    /* remove bullets on lists */
     list-style: none;
 }
 
 
+/* style for all input tags unless override */
 input { 
     border-radius: 5px;
     font-size: 15px;
@@ -36,56 +38,56 @@ input {
 }
 
 
-/* these elements will take up the whole page above the fold */
-
-
-
+/* ------------------------------------------- */
+/* ABOVE THE FOLD (atf) */
+/* ------------------------------------------- */
 #atf {
     display: flex;
-    min-height: 100vh;
     flex-direction: column;
 }
 
 
+/* contains the navbar, hamburger menu and dropdown-form */
 header {
     font-family: sans-serif;
     color: #333;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 60px;
-    background-color: #f5f5f5;
+    position: fixed;  /* The element is positioned relative to the browser window */
+    top: 0; /* no space on top */
     flex-grow: 1;
+    width: 100%;
+    height: 60px; /* fixed height */
+    background-color: #f5f5f5;
     border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 
 
+/* contains the logo and signin form */
 #navbar {
-    height: 100%;
-
-    /* make a large touch target */
-    /* expand the element to fill width
-    along primary axis ( horizontally ) */
-    flex-grow: 2;
-
-    font-size: 2rem;
-
-    /* center text */
+    height: 100%; /* fill the entire height of header */
+    /* applies to hamburger menu */
+    /* (rem font-size)Equal to the computed value of font-size 
+    on the root element. When specified on the 
+    font-size property of the root element, the 
+    rem units refer to the property's initial value. 
+    This means that 1rem equals the font size of the 
+    html element (which for most browsers has a default value of 16px) */
+    font-size: 2rem; 
+    /* The flex-grow property specifies how much the item will grow 
+    relative to the rest of the flexible items inside the same container. */
+    flex-grow: 2; 
+    /* position sign in form */
     display: flex;
     align-items: center;
 }
 
 
 #logo {
-
-    /* make a large touch target */
     /* expand the element to fill height */
     height: 100%;
 
-    /* make a large touch target */
-    /* expand the element to fill width
+    /* expand the element logo to fill width
     along primary axis ( horizontally ) */
-    /* also seperates logo with hamburger menu */
+    /* also seperates logo with hamburger menu, signin form */
     flex-grow: 1;
 
     /* font styling */
@@ -100,9 +102,11 @@ header {
     margin-left: 10%;
 }
 
+
 #logo a{
         color: black;
 }
+
 
 /* change the logo's text color when mouse hover's over it */
 #logo a:hover {
@@ -111,22 +115,27 @@ header {
 }
 
 
-
+/* styles the signin form */
 .nd{
     display: none;
-    white-space: nowrap;
+    white-space: nowrap; /* prevent from wrapping elements */
+    letter-spacing: 1px;
+    font-family: sans-serif;
+    margin-right: 10%;
 }
 
 
+/* yuummmmmm */
 #hamburger {
     padding: 10px;
     color: white;
-    background-color: #333;
-    
+    background-color: #333; 
     border-radius: 2px;
     margin-right: 20%;
 }
 
+
+/* change the color when hovered */
 #hamburger:hover{
     cursor: pointer;
     background-color: #0ebfe9;
@@ -134,17 +143,19 @@ header {
 }
 
 
+/* initially displayed as "none"; targeted when hamburger is clicked */
 #dropdown-form {
     background: rgba(51,51,51, 0.7);
     padding: 20px;
-    z-index: 10000;
-    flex-direction: column;
+    z-index: 10000; /* shows on top of everything */
+    flex-direction: column; /* position dropdown center vertically and fill the widht of dropdown-form */
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    transition: visibility 10s, opacity 0.5s linear;
     border-top: 2px solid black;
 }
 
+
+/* <a> style for dropdown form sign in and register */
 .btn {
     padding: 6px 12px;
     background-color: #333;
@@ -160,42 +171,35 @@ header {
     color: white;
 }
 
+
 .btn:hover{
     background-color: #0ebfe9;
     transition: 0.5s ease;
 }
 
 
-/* MOBILE MENU ON BOTTOM */
-/* nav mobile (nm) */
-
-.nm {
+/*  */
+#dropdown-form form {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* vertically */
 }
 
 
 #center {
     flex-grow: 1;
     margin-top: 70px;
-    max-width: 50%;
-    background-color: grey;
-    overflow-y: scroll;
+    
 }
 
 
-/* CALL TO ACTION (cta) */
+
 #center-content {
-
-    /* set the height of the cta container */
-    height: auto;
+     /* fill center */
+    
     font-size: 1.6rem;
-
-    /* set the color of the cta container */
     background-color: #f5f5f5;
     padding: 20px;
-    /* center text and button containers */
-    /*      #cta-txt, #cta-btn */
+    /* center all elements inside center-content */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -203,39 +207,73 @@ header {
     font-family: sans-serif;
 }
 
+
+/* align this elements as the logo and signin form in navbar*/
 #center-content h1 {
-      text-align: left;
       margin-right: 10%;
       margin-left: 10%;
 
 }
+
 
 #center-content-title{
     font-size: 50px;
     font-weight: 300;
 }
 
-#center-content-txt {
-    /* format text */
-   
-    font-weight: 300;
 
+
+#center-content-txt {
+    font-weight: 300; /*how thick or thin are the texts*/
     letter-spacing: 2px;
     color: #333;
-     
-    /* center text old fashioned-way */
-  
 }
 
-#register-btn{
+#sidebar {
+    flex-grow: 1;
+    margin-top: 70px;
+    height: 100vh;
+    background-color: grey;
+    max-width: 35vh;
+    overflow-y: scroll;
+}
 
+
+
+#sidebar-content {
+     /* fill center */
+    
+    font-size: 1.6rem;
+    background-color: #f5f5f5;
+    padding: 20px;
+    /* center all elements inside center-content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+
+/* align this elements as the logo and signin form in navbar*/
+#sidebar-content h1 {
+      margin-right: 10%;
+      margin-left: 10%;
+
+}
+
+
+#sidebar-content-title{
+    font-size: 50px;
+    font-weight: 300;
+}
+
+#register-btn {
     /* button's width */
     width: 20rem;
-
     /* button's height */
     height: 5rem;
     margin: 1.3rem 0;
-
     /* format text */
     font-weight: 300;
     line-height: 1;
@@ -243,20 +281,13 @@ header {
     /* format button */
     background-color: #333;
     border-radius: 5px;
-
-    /* center child anchor element */
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #register-btn a {
     font-family: sans-serif;
-    /* make a large touch target */
-    /* expand the anchor element to fill height */
+    /* fill the height of register-btn */
     height: 100%;
 
-    /* make a large touch target */
     /* expand the anchor element to fill width along primary axis ( horizontally ) */
     flex-grow: 1;
 
@@ -265,7 +296,6 @@ header {
     font-size: 1.8rem;
     font-weight: 300;
 
-    /* format anchor dimsions match the containing h2 element #cta-btn */
     border-radius: 5px;
 
     /* center the text */
@@ -279,16 +309,13 @@ header {
     transition: 0.5s ease;
 }
 
+
+
 /* ------------------------------------------- */
 /* BELOW THE FOLD (btf) */
 /* ------------------------------------------- */
-
-/* create flex containers for
-        images
-        articles
-*/
 .btf-content {
-    display: flex;
+    display: flex; /* for later use */
 }
 
 /* articles */
@@ -296,6 +323,7 @@ header {
     padding: 10px;
 }
 
+/* article title */
 .btf-content h3 {
     /* font format */
     font-family: sans-serif;
@@ -303,6 +331,7 @@ header {
     font-weight: 400;
 }
 
+/*article content */
 .btf-content p {
     /* font format */
     font-family: sans-serif;
@@ -311,12 +340,15 @@ header {
 }
 
 
+/* as it says */
 footer {
     height: 70px;
     background-color: #333; 
     padding: 10px;
 }
 
+
+/* team member names*/
 footer p {
     color: #999;
     font-family: sans-serif;
@@ -328,6 +360,7 @@ footer p {
     align-items: center;
 }
 
+/* dummy links in footer */
 footer p a{
     text-decoration: none;
     color: #999;
