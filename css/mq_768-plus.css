@@ -16,6 +16,10 @@
 }
 
 
+#gopher-img {
+    background-image: url("../img/logo-lg.png");
+}
+
 /* high resol then use above the fold design */
 html, body, #atf {
     height: 100%;

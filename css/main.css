@@ -46,6 +46,15 @@ input {
     flex-direction: column;
 }
 
+#gopher-img {
+    margin-top: 70px;
+    background-color: #8e8e8e;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    /* grow the hero image to fill in unused space */
+    flex-grow: 1;
+}
 
 /* contains the navbar, hamburger menu and dropdown-form */
 header {
@@ -189,88 +198,8 @@ header {
 
 
 #center {
-    flex-grow: 1;
-    margin-top: 70px;
-   
+    flex-grow: 1;  
 }
-
-
-
-#center-content {
-    height: 100%; /* fill center */
-    font-size: 1.6rem;
-    background-color: #f5f5f5;
-    padding: 20px;
-    /* center all elements inside center-content */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-}
-
-
-/* align this elements as the logo and signin form in navbar*/
-#center-content h1 {
-      margin-right: 10%;
-      margin-left: 10%;
-
-}
-
-
-#center-content-title{
-    font-size: 50px;
-    font-weight: 300;
-}
-
-
-#center-content-txt {
-    font-weight: 300; /*how thick or thin are the texts*/
-    letter-spacing: 2px;
-    color: #333;
-}
-
-#register-btn {
-    /* button's width */
-    width: 20rem;
-    /* button's height */
-    height: 5rem;
-    margin: 1.3rem 0;
-    /* format text */
-    font-weight: 300;
-    line-height: 1;
-
-    /* format button */
-    background-color: #333;
-    border-radius: 5px;
-}
-
-#register-btn a {
-    font-family: sans-serif;
-    /* fill the height of register-btn */
-    height: 100%;
-
-    /* expand the anchor element to fill width along primary axis ( horizontally ) */
-    flex-grow: 1;
-
-    /* format font */
-    color: #fff;
-    font-size: 1.8rem;
-    font-weight: 300;
-
-    border-radius: 5px;
-
-    /* center the text */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#register-btn a:hover {
-    background-color: #0ebfe9;
-    transition: 0.5s ease;
-}
-
 
 
 /* ------------------------------------------- */
@@ -332,4 +261,91 @@ footer p a{
 
 footer p a:hover{
     color: #0ebfe9;
+}
+
+
+#cta {
+
+    /* set the height of the cta container */
+    height: 170px;
+
+    /* set the color of the cta container */
+    background-color: #f5f5f5;
+
+    /* center text and button containers */
+    /*      #cta-txt, #cta-btn */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-txt {
+
+    /* format text */
+    font-family: 'Roboto Slab', serif;
+    font-weight: 300;
+    font-size: 3.5rem;
+    letter-spacing: 2px;
+    color: #333;
+
+    /* center text old fashioned-way */
+    text-align: center;
+}
+
+#cta-btn {
+
+    /* button's width */
+    width: 20rem;
+
+    /* button's height */
+    height: 5rem;
+    margin: 1.3rem 0;
+
+    /* format text */
+    font-family: sans-serif;
+    font-weight: 300;
+    line-height: 1;
+
+    /* format button */
+    background-color: #333;
+    border-radius: 5px;
+
+    /* center child anchor element */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-btn:hover {
+    background-color: #0ebfe9;
+    transition: 0.5 ease;
+}
+
+#cta-btn a {
+
+    /* make a large touch target */
+    /* expand the anchor element to fill height */
+    height: 100%;
+
+    /* make a large touch target */
+    /* expand the anchor element to fill width along primary axis ( horizontally ) */
+    flex-grow: 1;
+
+    /* format font */
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 300;
+
+    /* format anchor dimsions match the containing h2 element #cta-btn */
+    border-radius: 5px;
+
+    /* center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cta-btn a:hover {
+    background-color: #0ebfe9;
 }

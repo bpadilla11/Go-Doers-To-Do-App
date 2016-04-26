@@ -10,9 +10,12 @@
     justify-content: space-around; 
 }
 
+#gopher-img {
+    background-image: url("../img/logo-sml.png");
+}
 
 /* making this auto means removing above the fold design */
 /* auto to prevent element from overlapping */
 html, body, #atf {
-    height: auto;
+    height: 100%;
 }
