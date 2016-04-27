@@ -7,6 +7,7 @@
 
 		<link rel="stylesheet" href="../css/main.css">
 		<script type="text/javascript" src="../js/main.js"></script>
+
 		<link rel="stylesheet" href="../css/register.css">
         <!-- this is applied when screen width is < 768px -->
         <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
@@ -55,11 +56,14 @@
 							 <h1 id = "sign-up">Sign up</h1>
 							 <input type="text" name="firstname" placeholder="First name"required>
 			                 <input type= "text" name="lastname" placeholder="Last name" required>
-			                 <input type="email" name="email" placeholder="Enter your Email" required>
-			                 <input type="password" name="password1" placeholder="Choose a password" required>
-			                 <input type="password" name="password2" placeholder="Confirm password" required>
+			                 <input id="register-email" type="email" name="email" placeholder="Enter your Email" required>
+			                 <input id="register-password1" type="password" name="password1" placeholder="Choose a password" required>
+			                 <input id="register-password2" type="password" name="password2" placeholder="Confirm password" required>
                              <input class="btn" type="submit" value="Register">
-			                 </button>
+                             <div id="register-err-container">
+                                 <h5 id="register-ajax-error1"></h5>
+                                 <h5 id="register-ajax-error2"></h5>
+                             </div>
 			            </form>
 			        </section>
 			    </div>
@@ -70,4 +74,5 @@
                  <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
         	</footer>
     </body>
+    <script type="text/javascript" src="../js/ajax.js"></script>
 </html>

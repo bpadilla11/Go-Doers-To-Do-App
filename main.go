@@ -27,6 +27,7 @@ func init() {
 
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
+	r.HandleFunc("/api/passw_check", passw_check)
 
 	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css"))))
 	http.Handle("/js/", http.StripPrefix("/js", http.FileServer(http.Dir("js"))))
@@ -93,7 +94,7 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 	if err != nil {
 		http.Redirect(response, request, `/`, http.StatusSeeOther)
 	}
-	tpl.ExecuteTemplate(response, "index.html", session)
+	tpl.ExecuteTemplate(response, "index.html", nil)
 }
 
 
@@ -120,6 +121,8 @@ func register(response http.ResponseWriter, request *http.Request){
 		if err == nil{
 			log.Infof(ctx, "*** Error Info: In register, email not unique ***")
 			session.Message = "Email already exists \n "
+			tpl.ExecuteTemplate(response, "register.html", session)
+			return
 		}
 		//password confirmations not match
 		if password1 != password2 {
