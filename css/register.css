@@ -1,0 +1,24 @@
+#nm{ 
+	 
+	width:100%;
+    margin-top: 70px;
+
+}
+#sign-up{
+	font-family: sans-serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+}
+#nm *{
+    margin-bottom: 10px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#center-content form{
+    width: 100%;
+}
+
+
+
