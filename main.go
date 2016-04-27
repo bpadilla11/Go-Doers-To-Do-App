@@ -140,7 +140,7 @@ func register(response http.ResponseWriter, request *http.Request){
 			http.Error(response, err.Error(), 500)
 			return
 		}
-
+		
 		newUser := User{
 			FirstName: firstname,
 			LastName:  lastname,

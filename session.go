@@ -80,7 +80,6 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 	//for debugging purposes: paste the cookie id from the terminal to memcache viewer
 	//to see if the user(json) is being cached in memcache
 	//log.Infof(ctx, "Cookie Id:" + " " + cookie.Value)
-	log.Infof(ctx, cookie.Value)
 	m := memcache.Item{
 		Key:   cookie.Value,
 		Value: json,
