@@ -7,6 +7,7 @@ import (
 	"github.com/nu7hatch/gouuid"
 	"encoding/json"
 	"google.golang.org/appengine/log"
+	"time"
 )
 
 
@@ -79,6 +80,7 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 	//for debugging purposes: paste the cookie id from the terminal to memcache viewer
 	//to see if the user(json) is being cached in memcache
 	//log.Infof(ctx, "Cookie Id:" + " " + cookie.Value)
+	log.Infof(ctx, cookie.Value)
 	m := memcache.Item{
 		Key:   cookie.Value,
 		Value: json,
@@ -88,4 +90,30 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 	
 
 	return cookie.Value
+}
+
+
+func deleteSession(response http.ResponseWriter, request *http.Request) {
+	ctx := appengine.NewContext(request)
+	//get cookie
+	cookie, err := request.Cookie("session-info")
+	//no cookie
+	if err != nil {
+		return
+	}
+
+	cookie.MaxAge = -1
+	http.SetCookie(response, cookie)
+
+	_, session_id, err := getSession(request)
+	if err != nil{
+		//error getting in memcache
+	}
+
+	item := memcache.Item{
+		Key:   session_id,
+		Value: []byte(""),
+		Expiration: time.Duration(1 * time.Microsecond),
+	}
+	memcache.Set(ctx, &item)
 }

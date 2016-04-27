@@ -82,7 +82,9 @@ func login(response http.ResponseWriter, request *http.Request){
 
 
 func logout(response http.ResponseWriter, request *http.Request){
-
+	//delete cookie and item in memcache
+	deleteSession(response, request)
+	http.Redirect(response, request, `/`, http.StatusSeeOther)
 }
 
 
