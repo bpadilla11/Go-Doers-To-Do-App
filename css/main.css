@@ -37,6 +37,10 @@ input {
     margin: 1px;
 }
 
+input:hover{
+    background-color: #D3D3D3;
+}
+
 
 /* ------------------------------------------- */
 /* ABOVE THE FOLD (atf) */

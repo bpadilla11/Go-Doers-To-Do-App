@@ -146,7 +146,7 @@ func register(response http.ResponseWriter, request *http.Request){
 		}
 	}*/
 	//io.WriteString(response, user.Email)
-	tpl.ExecuteTemplate(response, "index.html", nil)
+	tpl.ExecuteTemplate(response, "register.html", nil)
 }
 
 
