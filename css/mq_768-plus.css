@@ -17,7 +17,7 @@
 
 
 #gopher-img {
-    background-image: url("../img/logo-lg.png");
+    background-image: url("/img/logo-lg.png");
 }
 
 /* high resol then use above the fold design */
