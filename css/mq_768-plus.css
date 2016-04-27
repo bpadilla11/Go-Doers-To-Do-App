@@ -1,0 +1,27 @@
+/* show sign in form in navbar */
+.nd {
+    display: flex; 
+}
+
+
+/* hide the hamburger: owwwwww */
+#hamburger{
+    display: none;
+}
+
+
+/* make sure that dropdown-form is not shown when we have high resol */
+#dropdown-form {
+    display: none !important;
+}
+
+
+#gopher-img {
+    background-image: url("/img/logo-lg.png");
+}
+
+/* high resol then use above the fold design */
+html, body, #atf {
+    height: 100%;
+}
+

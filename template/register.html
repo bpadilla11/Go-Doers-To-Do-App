@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ToDo's&Dont's</title>
+
+		<link rel="stylesheet" href="../css/main.css">
+		<script type="text/javascript" src="../js/main.js"></script>
+
+		<link rel="stylesheet" href="../css/register.css">
+        <!-- this is applied when screen width is < 768px -->
+        <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
+        <!-- this is applied when width > 768px -->
+        <link rel="stylesheet" media="screen and (min-width: 769px)" href="../css/mq_768-plus.css">
+    </head>
+	<body>
+		<div id="atf">		
+			            <header>
+                <!-- navbar contains the logo and the sign in inputs  -->
+                <div id="navbar">
+                    <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
+                    <form method="POST" class="nd" action="/login">
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input class="btn" type="submit" value="Login">
+                    </form>
+                    <!-- hamburger only shows up when the width of the screen is < 768px -->
+                    <!-- inline svg for extra credit -->
+                    <svg id="hamburger" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onclick="show_dropdown_form();" ><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg>
+                </div>
+                <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
+                     dropdown-form can only be accessed if the screen width is below 800px -->
+                <div id="dropdown-form" style="display: none;">
+                    <form method="POST" action="/login">
+                        <input type="email" placeholder="Email" required>
+                        <input type="password" placeholder="Password" required>
+                        <input class="btn" type="submit" value="Login">
+                        <a class="btn" href="/register">Register</a>
+                    </form>
+                </div>
+
+                <div id="login_status_modal" class="modalDialog">
+                    <div>
+                        <script type="text/javascript">show_login_modal({{.Message}});</script>
+                        <a class="close" onclick="close_login_modal();">X</a>
+                        <h1>{{.Message}}</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
+                    </div>
+                </div>
+            </header>
+			
+			    <div id="nm">
+			    	<section id = "center-content">
+			    		<form method="POST" action="/register">
+							 <h1 id = "sign-up">Sign up</h1>
+							 <input type="text" name="firstname" placeholder="First name"required>
+			                 <input type= "text" name="lastname" placeholder="Last name" required>
+			                 <input id="register-email" type="email" name="email" placeholder="Enter your Email" required>
+			                 <input id="register-password1" type="password" name="password1" placeholder="Choose a password" required>
+			                 <input id="register-password2" type="password" name="password2" placeholder="Confirm password" required>
+                             <input class="btn" type="submit" value="Register">
+                             <div id="register-err-container">
+                                 <h5 id="register-ajax-error1"></h5>
+                                 <h5 id="register-ajax-error2"></h5>
+                             </div>
+			            </form>
+			        </section>
+			    </div>
+			</div>
+
+		    <footer>
+		    	 <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
+                 <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
+        	</footer>
+    </body>
+    <script type="text/javascript" src="../js/ajax.js"></script>
+</html>

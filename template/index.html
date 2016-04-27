@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Specify the character encoding for the HTML document:-->
+        <meta charset="UTF-8">
+        <!--A <meta> viewport element gives the browser instructions on how to control the page's dimensions and scaling.
+            The width=device-width part sets the width of the page to follow the screen-width of the device (which will 
+                vary depending on the device).
+            The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ToDo's&Dont's</title>
+        <!-- main.css is let's say the base css. always applies to the index.html -->
+        <link rel="stylesheet" href="../css/main.css">
+        <script type="text/javascript" src="../js/main.js"></script>
+        
+        <!-- this is applied when screen width is < 768px -->
+        <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
+        <!-- this is applied when width > 768px -->
+        <link rel="stylesheet" media="screen and (min-width: 769px)" href="../css/mq_768-plus.css">
+    </head>
+
+    <body>
+        <!-- atf in main.css; styles atf to display its contents full page in the browser -->
+        <!-- atf, body, html height changes from auto -> 100% and vice versa depending on the width and height
+             of the browser defined by the media queries -->
+        <div id="atf">
+
+            <header>
+                <!-- navbar contains the logo and the sign in inputs  -->
+                <div id="navbar">
+                    <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
+                    <form method="POST" class="nd" action="/login">
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input class="btn" type="submit" value="Login">
+                    </form>
+                    <!-- hamburger only shows up when the width of the screen is < 768px -->
+                    <!-- inline svg for extra credit -->
+                    <svg id="hamburger" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onclick="show_dropdown_form();" ><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg>
+                </div>
+                <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
+                     dropdown-form can only be accessed if the screen width is below 800px -->
+                <div id="dropdown-form" style="display: none;">
+                    <form method="POST" action="/login">
+                        <input type="text" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <input class="btn" type="submit" value="Login">
+                        <a class="btn" href="/register">Register</a>
+                    </form>
+                </div>
+
+                <div id="login_status_modal" class="modalDialog">
+                    <div>
+                        <script type="text/javascript">show_login_modal({{.Message}});</script>
+                        <a class="close" onclick="close_login_modal();">X</a>
+                        <h1>{{.Message}}</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div id="gopher-img"></div>
+            <main>
+                <!-- call to action (cta) -->
+                <section id="cta">
+                    <h1 id="cta-txt">Don't be a Don'ter be a Doer!</h1>
+                    <h2 id="cta-btn"><a class="btn" href="/register">Register</a></h2>
+                </section>
+            </main>
+        </div>
+
+        <!-- content below the fold; shows below atf-->
+        <section class="btf-content">
+            <article>
+                <h3>ToDo1</h3>
+                <p>In hac habitasse platea dictumst. Maecenas semper pulvinar maximus. Ut et sem quis velit dapibus euismod eu congue justo. Cras at molestie orci. Vivamus a malesuada magna, ut commodo libero. Fusce mattis varius turpis a congue. Aenean bibendum arcu at auctor ullamcorper. Phasellus scelerisque ultrices metus eu dapibus. Praesent elit lectus, euismod a purus eu, bibendum molestie eros. In quis neque justo. Aliquam venenatis tempus ipsum, facilisis imperdiet urna dapibus ut. Nam ultricies massa sit amet leo vehicula, at bibendum orci vestibulum. Proin ultrices erat id metus vulputate, quis dictum augue sodales. Fusce commodo erat ac metus convallis porta. Fusce tincidunt, mi id consequat faucibus, lectus lorem congue nulla, at dignissim dolor magna quis libero. Nunc dictum ligula nec turpis gravida, ut fermentum lectus semper. Quisque a bibendum sapien.</p>
+            </article>
+
+            <article>
+                <h3>ToDo2</h3>
+                <p>Fusce congue sapien lectus, sed ullamcorper orci auctor eget. Aliquam eget nisl metus. Vivamus et quam metus. Suspendisse nunc enim, dapibus nec metus sed, venenatis dapibus eros. Proin imperdiet ex dignissim, auctor enim ac, maximus nulla. Sed interdum ligula et ex consectetur, vulputate euismod ante fermentum. Curabitur congue ante consectetur nisl maximus blandit. Sed pellentesque lacinia lacus id posuere. Curabitur vulputate pulvinar nulla, vitae lobortis orci rutrum tincidunt. Sed vel magna et quam sollicitudin fringilla ac eu diam. Maecenas ligula risus, rhoncus vel mi quis, imperdiet bibendum metus. Nulla facilisi. Suspendisse tempus ligula sed porta laoreet. Integer vehicula ac felis quis egestas. Quisque eu metus a ex maximus efficitur. Curabitur tincidunt a massa et sollicitudin.</p>
+            </article>
+
+            <article>
+                <h3>ToDo3</h3>
+                <p>Ut vitae purus rhoncus, bibendum odio ut, fermentum odio. Sed et fermentum purus, id luctus ligula. Donec sit amet auctor nisl. Sed sem lectus, finibus sit amet nunc nec, imperdiet imperdiet metus. Nunc dignissim vulputate libero, ac malesuada orci fermentum quis. Quisque a enim augue. Proin mattis porta mauris, a malesuada eros. Aliquam erat volutpat. Duis placerat, mauris nec egestas interdum, enim ipsum elementum mi, et luctus augue ex sit amet leo. Sed justo tortor, malesuada vel tempus quis, luctus ac urna. Aliquam magna massa, viverra vel enim eget, accumsan eleifend neque. Vivamus bibendum, odio ac posuere finibus, magna felis tempus enim, cursus tristique dui erat at felis.</p>
+            </article>
+
+        </section>
+        <!-- footer content: contains our names and some dummy links -->
+        <footer>
+            <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
+            <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
+        </footer>
+    </body>
+</html>

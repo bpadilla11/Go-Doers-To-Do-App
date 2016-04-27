@@ -37,6 +37,10 @@ input {
     margin: 1px;
 }
 
+input:hover{
+    background-color: #D3D3D3;
+}
+
 
 /* ------------------------------------------- */
 /* ABOVE THE FOLD (atf) */
@@ -46,6 +50,15 @@ input {
     flex-direction: column;
 }
 
+#gopher-img {
+    margin-top: 70px;
+    background-color: #8e8e8e;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    /* grow the hero image to fill in unused space */
+    flex-grow: 1;
+}
 
 /* contains the navbar, hamburger menu and dropdown-form */
 header {
@@ -131,7 +144,10 @@ header {
     color: white;
     background-color: #333; 
     border-radius: 2px;
-    margin-right: 20%;
+    margin-right: 10%;
+    width: 25px;
+    height: 25px;
+    fill: white;
 }
 
 
@@ -155,7 +171,7 @@ header {
 }
 
 
-/* <a> style for dropdown form sign in and register */
+/* style for dropdown form sign in and register */
 .btn {
     padding: 6px 12px;
     background-color: #333;
@@ -185,109 +201,71 @@ header {
 }
 
 
-#center {
-    flex-grow: 1;
-    margin-top: 70px;
-    
-}
+#cta {
 
+    /* set the height of the cta container */
+    height: 170px;
 
-
-#center-content {
-     /* fill center */
-    
-    font-size: 1.6rem;
+    /* set the color of the cta container */
     background-color: #f5f5f5;
-    padding: 20px;
-    /* center all elements inside center-content */
+
+    /* center text and button containers */
+    /*      #cta-txt, #cta-btn */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: sans-serif;
 }
 
+#cta-txt {
 
-/* align this elements as the logo and signin form in navbar*/
-#center-content h1 {
-      margin-right: 10%;
-      margin-left: 10%;
-
-}
-
-
-#center-content-title{
-    font-size: 50px;
+    /* format text */
+    font-family: 'Roboto Slab', serif;
     font-weight: 300;
-}
-
-
-
-#center-content-txt {
-    font-weight: 300; /*how thick or thin are the texts*/
+    font-size: 3.5rem;
     letter-spacing: 2px;
     color: #333;
+
+    /* center text old fashioned-way */
+    text-align: center;
 }
 
-#sidebar {
-    flex-grow: 1;
-    margin-top: 70px;
-    height: 100vh;
-    background-color: grey;
-    max-width: 35vh;
-    overflow-y: scroll;
-}
+#cta-btn {
 
-
-
-#sidebar-content {
-     /* fill center */
-    
-    font-size: 1.6rem;
-    background-color: #f5f5f5;
-    padding: 20px;
-    /* center all elements inside center-content */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-}
-
-
-/* align this elements as the logo and signin form in navbar*/
-#sidebar-content h1 {
-      margin-right: 10%;
-      margin-left: 10%;
-
-}
-
-
-#sidebar-content-title{
-    font-size: 50px;
-    font-weight: 300;
-}
-
-#register-btn {
     /* button's width */
     width: 20rem;
+
     /* button's height */
     height: 5rem;
     margin: 1.3rem 0;
+
     /* format text */
+    font-family: sans-serif;
     font-weight: 300;
     line-height: 1;
 
     /* format button */
     background-color: #333;
     border-radius: 5px;
+
+    /* center child anchor element */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#register-btn a {
-    font-family: sans-serif;
-    /* fill the height of register-btn */
+#cta-btn:hover {
+    background-color: #0ebfe9;
+    transition: 0.5 ease;
+}
+
+#cta-btn a {
+
+    /* make a large touch target */
+    /* expand the anchor element to fill height */
     height: 100%;
 
+    /* make a large touch target */
     /* expand the anchor element to fill width along primary axis ( horizontally ) */
     flex-grow: 1;
 
@@ -296,6 +274,7 @@ header {
     font-size: 1.8rem;
     font-weight: 300;
 
+    /* format anchor dimsions match the containing h2 element #cta-btn */
     border-radius: 5px;
 
     /* center the text */
@@ -304,11 +283,9 @@ header {
     align-items: center;
 }
 
-#register-btn a:hover {
+#cta-btn a:hover {
     background-color: #0ebfe9;
-    transition: 0.5s ease;
 }
-
 
 
 /* ------------------------------------------- */
@@ -370,4 +347,78 @@ footer p a{
 
 footer p a:hover{
     color: #0ebfe9;
+}
+
+
+.modalDialog {
+    position: fixed;
+    font-family: sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 99999;
+    opacity:0;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    pointer-events: none;
+}
+
+.modalDialog_show {
+    position: fixed;
+    font-family: sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 99999;
+    -webkit-transition: opacity 400ms ease-in;
+    -moz-transition: opacity 400ms ease-in;
+    transition: opacity 400ms ease-in;
+    opacity:1;
+    pointer-events: auto;
+}
+
+.modalDialog_show > div {
+    width: 40%;
+    height: 200px;
+    position: relative;
+    margin: 10% auto;
+    padding: 40px;
+    border-radius: 10px;
+    background: #fff;
+    background: -moz-linear-gradient(#fff, #999);
+    background: -webkit-linear-gradient(#fff, #999);
+    background: -o-linear-gradient(#fff, #999);
+    text-align: center;
+    color: red;
+
+}
+
+
+.close {
+    background: #333;
+    color: white;
+    line-height: 25px;
+    position: absolute;
+    right: -12px;
+    text-align: center;
+    top: -10px;
+    width: 24px;
+    text-decoration: none;
+    font-weight: bold;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    -moz-box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 1px 1px 3px #000;
+    box-shadow: 1px 1px 3px #000;
+}
+
+.close:hover { 
+    cursor: pointer;
+    background: #0ebfe9; 
 }

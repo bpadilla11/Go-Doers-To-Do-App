@@ -1,0 +1,20 @@
+/* show hamburger: yummmmmm */
+#hamburger{
+	display: flex;
+}
+
+
+.btf-content{
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around; 
+}
+
+#gopher-img {
+    background-image: url("/img/logo-sml.png");
+}
+
+
+html, body, #atf {
+    height: 100%;
+}
