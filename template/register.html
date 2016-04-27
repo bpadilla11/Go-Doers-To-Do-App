@@ -32,7 +32,7 @@
                      dropdown-form can only be accessed if the screen width is below 800px -->
                 <div id="dropdown-form" style="display: none;">
                     <form method="POST" action="/login">
-                        <input type="text" placeholder="Email" required>
+                        <input type="email" placeholder="Email" required>
                         <input type="password" placeholder="Password" required>
                         <input class="btn" type="submit" value="Login">
                         <a class="btn" href="/register">Register</a>
@@ -44,21 +44,21 @@
                         <script type="text/javascript">show_login_modal({{.Message}});</script>
                         <a class="close" onclick="close_login_modal();">X</a>
                         <h1>{{.Message}}</h1>
-                        <h1>Email or Password incorrect.</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
                     </div>
                 </div>
             </header>
 			
 			    <div id="nm">
 			    	<section id = "center-content">
-			    		<form>
+			    		<form method="POST" action="/register">
 							 <h1 id = "sign-up">Sign up</h1>
-							 <input type="text" placeholder="First name"required>
-			                 <input type= "text" placeholder="Last name" required>
-			                 <input type="email" placeholder="Enter your Email" required>
-			                 <input type="password" placeholder="Choose a password" required>
-			                 <input type="password" placeholder="Confirm password" required>
-			                 <button class="btn" type="submit"> Register
+							 <input type="text" name="firstname" placeholder="First name"required>
+			                 <input type= "text" name="lastname" placeholder="Last name" required>
+			                 <input type="email" name="email" placeholder="Enter your Email" required>
+			                 <input type="password" name="password1" placeholder="Choose a password" required>
+			                 <input type="password" name="password2" placeholder="Confirm password" required>
+                             <input class="btn" type="submit" value="Register">
 			                 </button>
 			            </form>
 			        </section>

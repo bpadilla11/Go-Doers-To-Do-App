@@ -42,8 +42,8 @@
                      dropdown-form can only be accessed if the screen width is below 800px -->
                 <div id="dropdown-form" style="display: none;">
                     <form method="POST" action="/login">
-                        <input type="text" placeholder="Email" required>
-                        <input type="password" placeholder="Password" required>
+                        <input type="text" name="email" placeholder="Email" required>
+                        <input type="password" name="password" placeholder="Password" required>
                         <input class="btn" type="submit" value="Login">
                         <a class="btn" href="/register">Register</a>
                     </form>
@@ -54,7 +54,7 @@
                         <script type="text/javascript">show_login_modal({{.Message}});</script>
                         <a class="close" onclick="close_login_modal();">X</a>
                         <h1>{{.Message}}</h1>
-                        <h1>Email or Password incorrect.</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
                     </div>
                 </div>
             </header>

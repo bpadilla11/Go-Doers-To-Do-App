@@ -11,7 +11,7 @@ import (
 
 
 //gets the session in memcache
-func getSession(request *http.Request) (*memcache.Item, string, bool, error) {
+func getSession(request *http.Request) (*memcache.Item, string, error) {
 	//NewContext returns a context for an in-flight HTTP request. This function is cheap.
 	ctx := appengine.NewContext(request)
 
@@ -28,11 +28,11 @@ func getSession(request *http.Request) (*memcache.Item, string, bool, error) {
 			item, err := memcache.Get(ctx, val)
 			//not found in memcache
 			if err != nil {
-				return &memcache.Item{}, "", false, err 
+				return &memcache.Item{}, "", err 
 			}
-			return item, val, true, nil
+			return item, val, nil
 		}
-		return &memcache.Item{}, "", false, err
+		return &memcache.Item{}, "", err
 	}
 
 	//cookie exists
@@ -40,14 +40,14 @@ func getSession(request *http.Request) (*memcache.Item, string, bool, error) {
 	item, err := memcache.Get(ctx, cookie.Value)
 	//if cookie not in memcache
 	if err != nil {
-		return &memcache.Item{}, "", false, err
+		return &memcache.Item{}, "", err
 	}
 	//else
-	return item, cookie.Value, false, nil
+	return item, cookie.Value, nil
 }
 
 
-func createSession(response http.ResponseWriter, request *http.Request, user User) (string, bool){
+func createSession(response http.ResponseWriter, request *http.Request, user User) string{
 	ctx := appengine.NewContext(request)
 
 	id, _ := uuid.NewV4() //generate new uuid
@@ -74,7 +74,7 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 		//http.Error() replies to the request with the specified error message and HTTP code. 
 		//The error message should be plain text.
 		http.Error(response, err.Error(), 500)
-		return "", false
+		return ""
 	}
 	//for debugging purposes: paste the cookie id from the terminal to memcache viewer
 	//to see if the user(json) is being cached in memcache
@@ -85,10 +85,7 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 	}
 	memcache.Set(ctx, &m)
 
-	_, err = request.Cookie("session-info")
-	if err != nil{
-		return cookie.Value, false
-	}
+	
 
-	return cookie.Value, true
+	return cookie.Value
 }
