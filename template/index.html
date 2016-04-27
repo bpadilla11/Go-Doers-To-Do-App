@@ -14,9 +14,9 @@
         <script type="text/javascript" src="../js/main.js"></script>
         
         <!-- this is applied when screen width is < 768px -->
-        <link rel="stylesheet" media="screen and (max-width: 767px)" href="../css/mq_768-less.css">
+        <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
         <!-- this is applied when width > 768px -->
-        <link rel="stylesheet" media="screen and (min-width: 768px)" href="../css/mq_768-plus.css">
+        <link rel="stylesheet" media="screen and (min-width: 769px)" href="../css/mq_768-plus.css">
     </head>
 
     <body>
@@ -29,7 +29,7 @@
                 <!-- navbar contains the logo and the sign in inputs  -->
                 <div id="navbar">
                     <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
-                    <form method="POST" class="nd">
+                    <form method="POST" class="nd" action="/login">
                         <input type="email" name="email" placeholder="Email" required>
                         <input type="password" name="password" placeholder="Password" required>
                         <input class="btn" type="submit" value="Login">
@@ -41,12 +41,21 @@
                 <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
                      dropdown-form can only be accessed if the screen width is below 800px -->
                 <div id="dropdown-form" style="display: none;">
-                    <form>
+                    <form method="POST" action="/login">
                         <input type="text" placeholder="Email" required>
                         <input type="password" placeholder="Password" required>
                         <input class="btn" type="submit" value="Login">
                         <a class="btn" href="/register">Register</a>
                     </form>
+                </div>
+
+                <div id="login_status_modal" class="modalDialog">
+                    <div>
+                        <script type="text/javascript">show_login_modal({{.Message}});</script>
+                        <a class="close" onclick="close_login_modal();">X</a>
+                        <h1>{{.Message}}</h1>
+                        <h1>Email or Password incorrect.</h1>
+                    </div>
                 </div>
             </header>
             

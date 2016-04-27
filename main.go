@@ -6,8 +6,8 @@ import (
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
 	"golang.org/x/crypto/bcrypt" //password hashing
-	"io"
 )
 
 
@@ -20,7 +20,7 @@ func init() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
 	r.HandleFunc("/", index)
-	r.HandleFunc("login", login)
+	r.HandleFunc("/login", login)
 	r.HandleFunc("/logout", logout)
 	r.HandleFunc("/dashboard", dashboard)
 	r.HandleFunc("/register", register)
@@ -36,9 +36,18 @@ func init() {
 
 
 func index(response http.ResponseWriter, request *http.Request) {
-	if request.Method == "POST" {
-		login(response, request)
+	//get session from memcache -> session.go
+	_, session_id, cookieSet, err := getSession(request)
+
+	//found a session redirect to dashboard(Problem: getting the session info again in dashboard)
+	if err == nil {
+		if cookieSet{
+			http.Redirect(response, request, `/dashboard`, http.StatusSeeOther)
+		} else {
+			http.Redirect(response, request, `/dashboard?id=`+session_id, http.StatusSeeOther)
+		}
 	}
+	//else stay on index
 	tpl.ExecuteTemplate(response, "index.html", nil)
 }
 
@@ -46,43 +55,55 @@ func index(response http.ResponseWriter, request *http.Request) {
 
 //login process
 func login(response http.ResponseWriter, request *http.Request){
-	email := request.FormValue("email")
-	password := request.FormValue("password")
-
+	var session Session
+	var user User
 	ctx := appengine.NewContext(request)
 
-	//get the user with given email in datastore
-	key := datastore.NewKey(ctx, "Users", email, 0, nil)
+	if request.Method == "POST" {
+		email := request.FormValue("email")
+		password := request.FormValue("password")
 
-	var user User
-	err := datastore.Get(ctx, key, &user) //store info of User in datastore to user
-	
-	//login failed
-	//wrong password || user email not found
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
-		var s Session
-		s.State = false
-		tpl.ExecuteTemplate(response, "index.html", s)
-		return
+		//get the user with given email in datastore
+		key := datastore.NewKey(ctx, "Users", email, 0, nil)
+		err := datastore.Get(ctx, key, &user) //store info of User in datastore to user
+		
+		//login failed
+		//wrong password || user email not found
+		if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
+			log.Infof(ctx, "*** Error Info: Login Failed, given credentials not found in datastore. ***")
+			session.State = false
+			session.Message = "Logged in Failed!"
+		} else{
+			//login success
+			//create a new session for the user
+			session_id, cookieSet := createSession(response, request, user)
+			if cookieSet {
+				http.Redirect(response, request, `/dashboard`, http.StatusSeeOther)
+			} else {
+				//redirect to dashboard
+				http.Redirect(response, request, `/dashboard?id=`+session_id, http.StatusSeeOther)
+			} 
+		}
 	}
-
-	//create session cookie and/or url?
-
-	io.WriteString(response, user.Email)
-	//http.Redirect(response, request, "/dashboard", 302) //302 http status found
-	tpl.ExecuteTemplate(response, "index.html", nil)
+	tpl.ExecuteTemplate(response, "index.html", session)
 }
 
 
 
 func logout(response http.ResponseWriter, request *http.Request){
 
+
 }
 
 
 
 func dashboard(response http.ResponseWriter, request *http.Request){
-
+	//get session from memcache -> session.go
+	_, _, _, err := getSession(request)
+	//no session found anywhere(means not login)
+	if err != nil {
+		http.Redirect(response, request, `/`, http.StatusSeeOther)
+	}
 }
 
 
@@ -130,3 +151,5 @@ func register(response http.ResponseWriter, request *http.Request){
 
 
 //go get github.com/gorilla/mux
+
+//the session_id == uuid == cookie.Value is being passed in the url 
