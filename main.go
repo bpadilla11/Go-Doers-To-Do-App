@@ -8,6 +8,8 @@ import (
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"golang.org/x/crypto/bcrypt" //password hashing
+	"google.golang.org/appengine/memcache"
+	"encoding/json"
 )
 
 
@@ -38,11 +40,13 @@ func init() {
 
 func index(response http.ResponseWriter, request *http.Request) {
 	//get session from memcache -> session.go
+	var session Session
 	_, session_id, err := getSession(request)
+	session.Session_id = session_id
 
 	//found a session redirect to dashboard(Problem: getting the session info again in dashboard)
 	if err == nil {
-		http.Redirect(response, request, `/dashboard?id=`+session_id, http.StatusSeeOther)
+		http.Redirect(response, request, `/dashboard?id=`+session.Session_id, http.StatusSeeOther)
 	}
 	//else stay on index
 	tpl.ExecuteTemplate(response, "index.html", nil)
@@ -72,8 +76,8 @@ func login(response http.ResponseWriter, request *http.Request){
 		} else{
 			//login success
 			//create a new session for the user
-			session_id := createSession(response, request, user)
-			http.Redirect(response, request, `/dashboard?id=`+session_id, http.StatusSeeOther)
+			session.Session_id = createSession(response, request, user)
+			http.Redirect(response, request, `/dashboard?id=`+session.Session_id, http.StatusSeeOther)
 		}
 	}
 	tpl.ExecuteTemplate(response, "index.html", session)
@@ -88,15 +92,25 @@ func logout(response http.ResponseWriter, request *http.Request){
 }
 
 
-
 func dashboard(response http.ResponseWriter, request *http.Request){
+	ctx := appengine.NewContext(request)
+	var session Session
+	var user User
 	//get session from memcache -> session.go
-	_, _, err := getSession(request)
+	_, session_id, err := getSession(request)
 	//no session found anywhere(means not login)
 	if err != nil {
 		http.Redirect(response, request, `/`, http.StatusSeeOther)
 	}
-	tpl.ExecuteTemplate(response, "dash.html", nil)
+	session.Session_id = session_id
+	item, err := memcache.Get(ctx, session_id)
+	if err != nil{
+		logout(response, request)
+		return
+	}
+	json.Unmarshal(item.Value, &user)
+	session.User = user
+	tpl.ExecuteTemplate(response, "dash.html", session)
 }
 
 
@@ -140,7 +154,7 @@ func register(response http.ResponseWriter, request *http.Request){
 			http.Error(response, err.Error(), 500)
 			return
 		}
-
+		
 		newUser := User{
 			FirstName: firstname,
 			LastName:  lastname,

@@ -17,9 +17,10 @@ type User struct {
 
 
 type Session struct {
-	User    User
-	State   bool
-	Message string
+	User       User
+	Session_id string
+	State      bool
+	Message    string
 }
 
 

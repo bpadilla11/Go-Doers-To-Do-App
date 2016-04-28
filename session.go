@@ -93,27 +93,32 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 }
 
 
+
 func deleteSession(response http.ResponseWriter, request *http.Request) {
 	ctx := appengine.NewContext(request)
-	//get cookie
+	var session Session
+	_, session_id, err := getSession(request)
+	session.Session_id = session_id
+
 	cookie, err := request.Cookie("session-info")
 	//no cookie
+
 	if err != nil {
+		item := memcache.Item{
+			Key:   session.Session_id,
+			Value: []byte(""),
+			Expiration: time.Duration(1 * time.Microsecond),
+		}
+		memcache.Set(ctx, &item)
 		return
 	}
-
 	cookie.MaxAge = -1
 	http.SetCookie(response, cookie)
-
-	_, session_id, err := getSession(request)
-	if err != nil{
-		//error getting in memcache
-	}
-
 	item := memcache.Item{
-		Key:   session_id,
+		Key:   cookie.Value,
 		Value: []byte(""),
 		Expiration: time.Duration(1 * time.Microsecond),
 	}
 	memcache.Set(ctx, &item)
 }
+
