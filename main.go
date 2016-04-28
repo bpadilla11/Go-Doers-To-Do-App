@@ -55,8 +55,6 @@ func index(response http.ResponseWriter, request *http.Request) {
 }
 
 
-
-//login process
 func login(response http.ResponseWriter, request *http.Request){
 	var session Session
 	var user User
@@ -71,7 +69,7 @@ func login(response http.ResponseWriter, request *http.Request){
 		err := datastore.Get(ctx, key, &user) //store info of User in datastore to user
 		
 		//login failed
-		//wrong password || user email not found
+		//wrong password || no user in datastore
 		if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
 			log.Infof(ctx, "*** Error Info: Login Failed, given credentials not found in datastore. ***")
 			session.Message = "Logged in Failed! \n Email or password incorrect"
@@ -86,10 +84,12 @@ func login(response http.ResponseWriter, request *http.Request){
 }
 
 
-
 func logout(response http.ResponseWriter, request *http.Request){
-	//delete cookie and item in memcache
+	//delete cookie and item in memcache effectively destroying the session
 	deleteSession(response, request)
+	//after the cookie is deleted and the session in memcache redirect to index
+	//and the user will not be able to go back to dashbaord because the user
+	//has no session set.
 	http.Redirect(response, request, `/`, http.StatusSeeOther)
 }
 
@@ -102,19 +102,31 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 	_, session_id, err := getSession(request)
 	//no session found anywhere(means not login)
 	if err != nil {
+		//redirect to index
 		http.Redirect(response, request, `/`, http.StatusSeeOther)
+		return //is this needed?
 	}
+
 	session.Session_id = session_id
+	//retrieve session in memcache
 	item, err := memcache.Get(ctx, session_id)
+
+	//if no session was found in memcache then invoke logout that
+	//effectively deletes the session.
+	//this is a guard for when a cookie is not found, logout which calls deleteSession
+	//will use the url value when there is no cookie and will use that url value to
+	//reference the item in memcache to delete it.
 	if err != nil{
 		logout(response, request)
-		return
+		return //probably dont need this
 	}
+
+	//found a session, then unmarshal the user
 	json.Unmarshal(item.Value, &user)
 	session.User = user
+	//pass session which has the user information to dash.html 
 	tpl.ExecuteTemplate(response, "dash.html", session)
 }
-
 
 
 func register(response http.ResponseWriter, request *http.Request){
@@ -131,6 +143,8 @@ func register(response http.ResponseWriter, request *http.Request){
 		password2 := request.FormValue("password2")
 
 		user.Email = email
+		//generate a key and check the datastore to check if the user email
+		//already exists in datastore
 		key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
 		err := datastore.Get(ctx, key, &user)
 		
@@ -138,39 +152,54 @@ func register(response http.ResponseWriter, request *http.Request){
 		//the email is already taken and therefore not unique
 		if err == nil{
 			log.Infof(ctx, "*** Error Info: In register, email not unique ***")
+			//if the user email is already in datastore then generate an error message 
+			//and pass it to register.html to show to the user.
 			session.Message = "Email already exists \n "
 			tpl.ExecuteTemplate(response, "register.html", session)
 			return
 		}
-		//password confirmations not match
+		//password confirmations not match error
 		if password1 != password2 {
 			log.Infof(ctx, "*** Error Info: In register, password confirmations not match ***")
+			//generate error message
 			session.Message += "Password Confirmation Not Match!"
+			//if the password confirmation fails then generate an error message 
+			//and pass it to register.html to show to the user.
 			tpl.ExecuteTemplate(response, "register.html", session)
 			return
 		}
-		//no errors
+
+		//no errors in the user inputs
+		//secure the password using bcrypt and create the new user with the given information from
+		//post
 		hashed_password, err := bcrypt.GenerateFromPassword([]byte(password1), bcrypt.DefaultCost)
 		if err != nil {
+			//server error
 			log.Errorf(ctx, "*** Error Debug: In register, password hashing: %v ***", err)
 			http.Error(response, err.Error(), 500)
 			return
 		}
 		
+		//create new user with given values
 		newUser := User{
 			FirstName: firstname,
 			LastName:  lastname,
 			Email:     email,
 			Password:  string(hashed_password),
 		}
+
+		//generate new key to use for saving the user to datastore
 		key = datastore.NewKey(ctx, "Users", newUser.Email, 0, nil)
-		key, err = datastore.Put(ctx, key, &newUser)
+		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
 		if err != nil {
+			//server error
 			log.Errorf(ctx, "*** Error Debug: In register, failed to save newUser to datastore: %v ***", err)
 			http.Error(response, err.Error(), 500)
 			return
 		}
 
+		//create a session for the new user so the user will be automatically logged in after 
+		//registration
 		session_id := createSession(response, request, newUser)
 		http.Redirect(response, request, "/dashboard?id="+session_id, http.StatusSeeOther)
 		
