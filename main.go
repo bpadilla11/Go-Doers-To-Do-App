@@ -31,6 +31,8 @@ func init() {
 	r.HandleFunc("/api/email_check", email_check)
 	r.HandleFunc("/api/passw_check", passw_check)
 
+	r.Handle("/favicon.ico", http.NotFoundHandler())
+
 	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css"))))
 	http.Handle("/js/", http.StripPrefix("/js", http.FileServer(http.Dir("js"))))
 	http.Handle("/img/", http.StripPrefix("/img", http.FileServer(http.Dir("img"))))
