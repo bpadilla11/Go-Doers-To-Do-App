@@ -68,8 +68,8 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 		//In this case cookie will expire in an hour once a session is started.
 		MaxAge: 60 * 60,
 		//Uncomment next 2 lines before deploying
-		Secure: true,
-		HttpOnly: true,
+		//Secure: true,
+		//HttpOnly: true,
 	}
 
 	http.SetCookie(response, cookie)
@@ -95,6 +95,7 @@ func createSession(response http.ResponseWriter, request *http.Request, user Use
 	m := memcache.Item{
 		Key:   cookie.Value,
 		Value: json,
+		Expiration: time.Duration(60 * time.Minute), //item in memcache will expire after an hour same as cookie
 	}
 	memcache.Set(ctx, &m)
 
@@ -120,24 +121,25 @@ func deleteSession(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		//if their is no cookie in the browser then use the session_id from url
 		//to reference the memcache item
-		item := memcache.Item{
+		/*item := memcache.Item{
 			Key:   session.Session_id,
 			Value: []byte(""),
 			Expiration: time.Duration(1 * time.Microsecond),
 		}
-		memcache.Set(ctx, &item)
+		memcache.Set(ctx, &item)*/
+		memcache.Delete(ctx, session_id)
 		return
 	}
 	//setting this to -1 means delete now
 	cookie.MaxAge = -1
 	http.SetCookie(response, cookie)
-
+	memcache.Delete(ctx, cookie.Value)
 	//if cookie exists then use the cookie.Value to reference the memcache item
-	item := memcache.Item{
+	/*item := memcache.Item{
 		Key:   cookie.Value,
 		Value: []byte(""),
 		Expiration: time.Duration(1 * time.Microsecond),
 	}
-	memcache.Set(ctx, &item)
+	memcache.Set(ctx, &item)*/
 }
 
