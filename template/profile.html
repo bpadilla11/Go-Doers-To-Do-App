@@ -52,7 +52,7 @@
 			    		<form method="POST" action="/register">
                             <h1 id="edit-profile-head">Edit Profile</h1><br>
                             <p id="edit-profile-head-2">First Name</p>
-                            <input type="text" name="firstname" value="First name"required>
+                            <input type="text" name="firstname" value="{{.User.FirstName}}"required>
                             <p id="edit-profile-head-2">Last Name</p>
                             <input type= "text" name="lastname" value="Last name" required>
                             <p id="edit-profile-head-2">Email</p>

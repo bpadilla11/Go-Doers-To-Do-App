@@ -211,6 +211,10 @@ func profile(response http.ResponseWriter, request *http.Request){
 	var session Session
 	var user User
 	ctx := appengine.NewContext(request)
+	item, session_id, err := getSession(request)
+	json.Unmarshal(item.Value, &user)
+	session.User = user
+
 
 	if request.Method == "POST" {
 		firstname := request.FormValue("firstname")
@@ -220,7 +224,6 @@ func profile(response http.ResponseWriter, request *http.Request){
 		password1 := request.FormValue("password1")
 		password2 := request.FormValue("password2")
 
-		item, session_id, err := getSession(request)
 		if err != nil {
 			key := datastore.NewKey(ctx, "User", email, 0, nil)
 			err := datastore.Get(ctx, key, &user)
@@ -235,7 +238,7 @@ func profile(response http.ResponseWriter, request *http.Request){
 
 		if user.Email != email {
 			var checkuser User
-			key := datastore.NewKey(ctx, "Users", email, 0, nil)
+			key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
 			err := datastore.Get(ctx, key, &checkuser)
 			
 			//if there is no errors in getting the email in datastore, it means that 
@@ -260,7 +263,7 @@ func profile(response http.ResponseWriter, request *http.Request){
 			tpl.ExecuteTemplate(response, "profile.html", session)
 			return
 		}
-
+		oldEmail := user.Email
 		user.Email = email
 		user.FirstName = firstname
 		user.LastName = lastname
@@ -280,7 +283,7 @@ func profile(response http.ResponseWriter, request *http.Request){
 			//http.Error() replies to the request with the specified error message and HTTP code. 
 			//The error message should be plain text.
 			http.Error(response, err.Error(), 500)
-			return ""
+			return
 		}
 		//for debugging purposes: paste the cookie id from the terminal to memcache viewer
 		//to see if the user(json) is being cached in memcache
@@ -292,8 +295,8 @@ func profile(response http.ResponseWriter, request *http.Request){
 		}
 		memcache.Set(ctx, &m)
 
-		key = datastore.NewKey(ctx, "Users", , 0, nil)
-		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
+		key := datastore.NewKey(ctx, "Users", oldEmail, 0, nil)
+		key, err = datastore.Put(ctx, key, &user) //save user to datastore
 		if err != nil {
 			//server error
 			log.Errorf(ctx, "*** Error Debug: In register, failed to save newUser to datastore: %v ***", err)
@@ -303,7 +306,7 @@ func profile(response http.ResponseWriter, request *http.Request){
 
 	}
 
-		
+	tpl.ExecuteTemplate(response, "profile.html", session)
 }
 
 //go get github.com/gorilla/mux
