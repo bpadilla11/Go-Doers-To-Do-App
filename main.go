@@ -151,8 +151,6 @@ func register(response http.ResponseWriter, request *http.Request){
 		password2 := request.FormValue("password2")
 
 		user.Email = email
-
-
 		q := datastore.NewQuery("Users").Filter("Email =", email)
 		i, _ := q.Count(ctx)
 		

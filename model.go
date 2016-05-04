@@ -19,7 +19,6 @@ type User struct {
 
 type Session struct {
 	User    User
-	State   bool
 	Message string
 	Session_id string
 }

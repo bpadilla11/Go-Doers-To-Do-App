@@ -16,6 +16,9 @@ html, body, header, section, article, footer, a, div, ul, li, h1, h2, h3, p{
     box-sizing: border-box;
 }
 
+html, body, #atf {
+    height: 100%;
+}
 
  /* remove underline on hyperlinks */
 a {
