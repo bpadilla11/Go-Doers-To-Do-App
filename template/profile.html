@@ -21,19 +21,17 @@
                 <!-- navbar contains the logo and the sign in inputs  -->
                 <div id="navbar">
                     <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
-                    <div class="nd"><a class="btn" href="/profile">{{.User.Email}}</a><a class="btn" href="/logout">Logout</a></div>
+                    <div class="nd"><a class="btn" href="/profile?id={{.Session_id}}">{{.User.Email}}</a><a class="btn" href="/logout">Logout</a></div>
                     <!-- hamburger only shows up when the width of the screen is < 768px -->
                     <!-- inline svg for extra credit -->
                     <svg id="hamburger" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onclick="show_dropdown_form();" ><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg>
                 </div>
                 <!-- dropdown-form only shows up when hamburger menu is shown in the screen, therfore
                      dropdown-form can only be accessed if the screen width is below 800px -->
-                <div id="dropdown-form" style="display: none;">
-                    <form method="POST" action="/login">
-                        <input type="email" placeholder="Email" required>
-                        <input type="password" placeholder="Password" required>
-                        <input class="btn" type="submit" value="Login">
-                        <a class="btn" href="/profile">Save</a>
+                 <div id="dropdown-form" style="display: none;">
+                    <form class="nm">
+                        <a class="btn" href="/profile">{{.User.Email}}</button>
+                        <a class="btn" href="/logout">Logout</a>
                     </form>
                 </div>
 
@@ -49,25 +47,26 @@
 			
 			    <div id="nm">
 			    	<section id="center-content">
-			    		<form method="POST" action="/register">
+			    		<form method="POST" action="/profile?id={{.Session_id}}">
                             <h1 id="edit-profile-head">Edit Profile</h1><br>
                             <p id="edit-profile-head-2">First Name</p>
                             <input type="text" name="firstname" value="{{.User.FirstName}}"required>
                             <p id="edit-profile-head-2">Last Name</p>
-                            <input type= "text" name="lastname" value="Last name" required>
+                            <input type= "text" name="lastname" value="{{.User.LastName}}" required>
                             <p id="edit-profile-head-2">Email</p>
-                            <input id="register-email" type="email" name="email" value="Email" required>
-                            <a class="btn" href="#PasswordChange">Change Password</a>
+                            <input id="register-email" type="email" name="email" value="{{.User.Email}}" required>
+                            <a class="btn pw-btn" href="#PasswordChange">Change Password</a>
                             <div id="PasswordClose">
                                 <div id="PasswordChange" class="open">
                                     <br><p id="edit-profile-head-2">New Password</p>
-                                    <input id="register-password1" type="password" name="password1" value="New password" required>
+                                    <input id="register-password1" type="password" name="password1" placeholder="New password" novalidate>
                                     <p id="edit-profile-head-2">Confirm Password</p>
-                                    <input id="register-password2" type="password" name="password2" value="Confirm new password" required>
-                                    <a class="btn" href="#PasswordClose">Cancel</a>
+                                    <input id="register-password2" type="password" name="password2" placeholder="Confirm new password" novalidate>
+                                    <a class="btn pw-btn" href="#PasswordClose">Cancel</a>
                                 </div>
                             </div>
-                            <br><input class="btn" type="submit" value="Save">
+                            <br>
+                            <input class="btn profile-save" type="submit" value="Save">
                             <div id="register-err-container">
                                 <h5 id="register-ajax-error1"></h5>
                                 <h5 id="register-ajax-error2"></h5>

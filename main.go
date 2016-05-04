@@ -26,6 +26,7 @@ func init() {
 	r.HandleFunc("/logout", logout)
 	r.HandleFunc("/dashboard", dashboard)
 	r.HandleFunc("/register", register)
+	r.HandleFunc("/profile", profile)
 
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
@@ -65,12 +66,19 @@ func login(response http.ResponseWriter, request *http.Request){
 		password := request.FormValue("password")
 
 		//get the user with given email in datastore
-		key := datastore.NewKey(ctx, "Users", email, 0, nil)
-		err := datastore.Get(ctx, key, &user) //store info of User in datastore to user
+		//key := datastore.NewKey(ctx, "Users", email, 0, nil)
+		//err := datastore.Get(ctx, key, &user) //store info of User in datastore to user
+		q := datastore.NewQuery("Users").Filter("Email =", email).KeysOnly()
+		i, _ := q.Count(ctx)
+
+		keys, _ := q.GetAll(ctx, nil)
+		if i > 0 {
+			datastore.Get(ctx, keys[0], &user)
+		}
 		
 		//login failed
 		//wrong password || no user in datastore
-		if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
+		if i != 1 || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)) != nil {
 			log.Infof(ctx, "*** Error Info: Login Failed, given credentials not found in datastore. ***")
 			session.Message = "Logged in Failed! \n Email or password incorrect"
 		} else{
@@ -143,14 +151,14 @@ func register(response http.ResponseWriter, request *http.Request){
 		password2 := request.FormValue("password2")
 
 		user.Email = email
-		//generate a key and check the datastore to check if the user email
-		//already exists in datastore
-		key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
-		err := datastore.Get(ctx, key, &user)
+
+
+		q := datastore.NewQuery("Users").Filter("Email =", email)
+		i, _ := q.Count(ctx)
 		
 		//if there is no errors in getting the email in datastore, it means that 
 		//the email is already taken and therefore not unique
-		if err == nil{
+		if i != 0{
 			log.Infof(ctx, "*** Error Info: In register, email not unique ***")
 			//if the user email is already in datastore then generate an error message 
 			//and pass it to register.html to show to the user.
@@ -189,7 +197,7 @@ func register(response http.ResponseWriter, request *http.Request){
 		}
 
 		//generate new key to use for saving the user to datastore
-		key = datastore.NewKey(ctx, "Users", newUser.Email, 0, nil)
+		key := datastore.NewIncompleteKey(ctx, "Users", nil)
 		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
 		if err != nil {
 			//server error
@@ -214,7 +222,7 @@ func profile(response http.ResponseWriter, request *http.Request){
 	item, session_id, err := getSession(request)
 	json.Unmarshal(item.Value, &user)
 	session.User = user
-
+	session.Session_id = session_id
 
 	if request.Method == "POST" {
 		firstname := request.FormValue("firstname")
@@ -224,26 +232,38 @@ func profile(response http.ResponseWriter, request *http.Request){
 		password1 := request.FormValue("password1")
 		password2 := request.FormValue("password2")
 
+		//get from datastore, this if stmt will most likely not execute because
+		//it is guaranteed that we can get the user info from memcache. Why? because
+		//the user is logged in
+		//but there is also the case when the user deleted the cookie and messed up 
+		//the url so get from datastore and just create a new session
 		if err != nil {
-			key := datastore.NewKey(ctx, "User", email, 0, nil)
-			err := datastore.Get(ctx, key, &user)
-			if err != nil{
-				log.Errorf(ctx, "*** Error Debug: In Profile, User not Found: %v ***", err)
+			q := datastore.NewQuery("Users").Filter("Email =", user.Email).KeysOnly()
+			i, _ := q.Count(ctx)
+
+			keys, _ := q.GetAll(ctx, nil)
+			//0 or multiple users returned by the query, logout the user for safety
+			if i != 1{
+				log.Errorf(ctx, "*** Error Debug: In Profile, user not found: %v ***", err)
 				logout(response, request)
 			}
-
+			datastore.Get(ctx, keys[0], &user) //the query MUST return only 1 key
+		//user info is in memcache
 		}else{
 			json.Unmarshal(item.Value, &user)
 		}
 
+		//the user changed his/her email
 		if user.Email != email {
-			var checkuser User
-			key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
-			err := datastore.Get(ctx, key, &checkuser)
 			
+			//key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
+			//err := datastore.Get(ctx, key, &checkuser)
+			q := datastore.NewQuery("Users").Filter("Email =", email).KeysOnly()
+			i, _ := q.Count(ctx)
+
 			//if there is no errors in getting the email in datastore, it means that 
 			//the email is already taken and therefore not unique
-			if err == nil{
+			if i > 0{
 				log.Infof(ctx, "*** Error Info: In profile, email not unique ***")
 				//if the user email is already in datastore then generate an error message 
 				//and pass it to register.html to show to the user.
@@ -263,23 +283,28 @@ func profile(response http.ResponseWriter, request *http.Request){
 			tpl.ExecuteTemplate(response, "profile.html", session)
 			return
 		}
+
+		//safe to proceed
 		oldEmail := user.Email
 		user.Email = email
 		user.FirstName = firstname
 		user.LastName = lastname
-		hashed_password, err := bcrypt.GenerateFromPassword([]byte(password1), bcrypt.DefaultCost)
-		if err != nil {
-			//server error
-			log.Errorf(ctx, "*** Error Debug: In profile, password hashing: %v ***", err)
-			http.Error(response, err.Error(), 500)
-			return
-		}
 
-		user.Password = string(hashed_password)
+		if password1 != "" && password2 != ""{
+			hashed_password, err := bcrypt.GenerateFromPassword([]byte(password1), bcrypt.DefaultCost)
+			if err != nil {
+			//server error
+				log.Errorf(ctx, "*** Error Debug: In profile, password hashing: %v ***", err)
+				http.Error(response, err.Error(), 500)
+				return
+			}
+			user.Password = string(hashed_password)
+		}
+		
 		json, err := json.Marshal(user)
 		if err != nil {
 			//error marshalling user
-			log.Errorf(ctx, "*** Error Debug: In Profile json.Marshal: %v ***", err)
+			log.Errorf(ctx, "*** Error Debug: In profile json.Marshal: %v ***", err)
 			//http.Error() replies to the request with the specified error message and HTTP code. 
 			//The error message should be plain text.
 			http.Error(response, err.Error(), 500)
@@ -288,22 +313,26 @@ func profile(response http.ResponseWriter, request *http.Request){
 		//for debugging purposes: paste the cookie id from the terminal to memcache viewer
 		//to see if the user(json) is being cached in memcache
 		//log.Infof(ctx, "Cookie Id:" + " " + cookie.Value)
-		log.Infof(ctx, session_id)
+		//log.Infof(ctx, session_id)
 		m := memcache.Item{
 			Key:   session_id,
 			Value: json,
 		}
 		memcache.Set(ctx, &m)
 
-		key := datastore.NewKey(ctx, "Users", oldEmail, 0, nil)
-		key, err = datastore.Put(ctx, key, &user) //save user to datastore
+		//key := datastore.NewKey(ctx, "Users", oldEmail, 0, nil)
+		//key, err = datastore.Put(ctx, key, &user) //save user to datastore
+		q := datastore.NewQuery("Users").Filter("Email =", oldEmail).KeysOnly()
+		keys, _ := q.GetAll(ctx, nil)
+
+		datastore.Put(ctx, keys[0], &user)
 		if err != nil {
 			//server error
 			log.Errorf(ctx, "*** Error Debug: In register, failed to save newUser to datastore: %v ***", err)
 			http.Error(response, err.Error(), 500)
 			return
 		}
-
+		http.Redirect(response, request, "/profile?id="+session.Session_id, http.StatusSeeOther)
 	}
 
 	tpl.ExecuteTemplate(response, "profile.html", session)
