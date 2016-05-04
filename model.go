@@ -1,6 +1,7 @@
 package GodoersToDo
 
 
+
 const (
 	todo = "ToDo"
 	in_progress = "InProgress"
@@ -9,7 +10,6 @@ const (
 
 
 type User struct {
-	Id        int64
 	FirstName string
 	LastName  string
 	Email     string //primary key(unique)

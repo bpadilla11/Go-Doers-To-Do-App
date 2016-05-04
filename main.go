@@ -189,7 +189,7 @@ func register(response http.ResponseWriter, request *http.Request){
 		}
 		
 		//create new user with given values
-		newUser := User{
+		newUser := User{	
 			FirstName: firstname,
 			LastName:  lastname,
 			Email:     email,
@@ -199,6 +199,7 @@ func register(response http.ResponseWriter, request *http.Request){
 		//generate new key to use for saving the user to datastore
 		key := datastore.NewIncompleteKey(ctx, "Users", nil)
 		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
+
 		if err != nil {
 			//server error
 			log.Errorf(ctx, "*** Error Debug: In register, failed to save newUser to datastore: %v ***", err)
@@ -215,15 +216,19 @@ func register(response http.ResponseWriter, request *http.Request){
 	tpl.ExecuteTemplate(response, "register.html", session)
 }
 
+
 func profile(response http.ResponseWriter, request *http.Request){
 	var session Session
 	var user User
 	ctx := appengine.NewContext(request)
+
+	//get the current session from memcache
 	item, session_id, err := getSession(request)
 	json.Unmarshal(item.Value, &user)
 	session.User = user
 	session.Session_id = session_id
 
+	//user information is updated
 	if request.Method == "POST" {
 		firstname := request.FormValue("firstname")
 		lastname  := request.FormValue("lastname")
@@ -232,41 +237,34 @@ func profile(response http.ResponseWriter, request *http.Request){
 		password1 := request.FormValue("password1")
 		password2 := request.FormValue("password2")
 
-		//get from datastore, this if stmt will most likely not execute because
-		//it is guaranteed that we can get the user info from memcache. Why? because
-		//the user is logged in
-		//but there is also the case when the user deleted the cookie and messed up 
-		//the url so get from datastore and just create a new session
+		//err is from getSession and means that getSession failed to retrieve
+		//user info from memcache, if so then there is no way to retrieve the user info
+		//anywhere. Why? because we lost the session id in cookie or from the url and 
+		//there is no way to generate a key that can be use to find the user in datastore.
 		if err != nil {
-			q := datastore.NewQuery("Users").Filter("Email =", user.Email).KeysOnly()
-			i, _ := q.Count(ctx)
+			log.Errorf(ctx, "*** Error Debug: In profile, user is impossible to find: %v ***", err)
+			logout(response, request)
 
-			keys, _ := q.GetAll(ctx, nil)
-			//0 or multiple users returned by the query, logout the user for safety
-			if i != 1{
-				log.Errorf(ctx, "*** Error Debug: In Profile, user not found: %v ***", err)
-				logout(response, request)
-			}
-			datastore.Get(ctx, keys[0], &user) //the query MUST return only 1 key
 		//user info is in memcache
 		}else{
 			json.Unmarshal(item.Value, &user)
 		}
 
-		//the user changed his/her email
+		//if user decides to change email then check the datastore if the 
+		//new email is unique.
 		if user.Email != email {
-			
-			//key := datastore.NewKey(ctx, "Users", user.Email, 0, nil)
-			//err := datastore.Get(ctx, key, &checkuser)
-			q := datastore.NewQuery("Users").Filter("Email =", email).KeysOnly()
+			//perform a query to the datastore with the given new email
+			//if the query returns 1 or more query results with the given
+			//email, then it means new email is not unique.
+			q := datastore.NewQuery("Users").Filter("Email =", email)
 			i, _ := q.Count(ctx)
 
-			//if there is no errors in getting the email in datastore, it means that 
+			//if the query count returns a non 0 result, it means that 
 			//the email is already taken and therefore not unique
 			if i > 0{
 				log.Infof(ctx, "*** Error Info: In profile, email not unique ***")
 				//if the user email is already in datastore then generate an error message 
-				//and pass it to register.html to show to the user.
+				//and pass it to profile.html to show to the user.
 				session.Message = "Email already exists \n "
 				tpl.ExecuteTemplate(response, "profile.html", session)
 				return
@@ -279,17 +277,27 @@ func profile(response http.ResponseWriter, request *http.Request){
 			//generate error message
 			session.Message += "Password Confirmation Not Match!"
 			//if the password confirmation fails then generate an error message 
-			//and pass it to register.html to show to the user.
+			//and pass it to profile.html to show to the user.
 			tpl.ExecuteTemplate(response, "profile.html", session)
 			return
 		}
 
-		//safe to proceed
-		oldEmail := user.Email
-		user.Email = email
+		//below code will be reached if:
+		//  - user has a session in memcache
+		//	- new email is unique
+		//  - user did not change email
+		//  - password confirmations matches
+		oldEmail := user.Email //save the old email so we can use it to find the current user in datastore
+
+		//update the user fields
+		user.Email = email    
 		user.FirstName = firstname
 		user.LastName = lastname
 
+		//although password inputs are hidden in the profile.html it still goes to the server
+		//via the POST method. if the user did not change password, we will still get a ""(empty string)
+		//from the request.FormValue(...) and will be set as the new password of the user. so below if
+		//statement guards for that instance and makes sure that the user will not have an empty password.
 		if password1 != "" && password2 != ""{
 			hashed_password, err := bcrypt.GenerateFromPassword([]byte(password1), bcrypt.DefaultCost)
 			if err != nil {
@@ -310,28 +318,33 @@ func profile(response http.ResponseWriter, request *http.Request){
 			http.Error(response, err.Error(), 500)
 			return
 		}
-		//for debugging purposes: paste the cookie id from the terminal to memcache viewer
-		//to see if the user(json) is being cached in memcache
-		//log.Infof(ctx, "Cookie Id:" + " " + cookie.Value)
-		//log.Infof(ctx, session_id)
+
 		m := memcache.Item{
 			Key:   session_id,
 			Value: json,
 		}
 		memcache.Set(ctx, &m)
 
-		//key := datastore.NewKey(ctx, "Users", oldEmail, 0, nil)
-		//key, err = datastore.Put(ctx, key, &user) //save user to datastore
+		//make a datastore query to find the current user(use the old email since the info of user in 
+		//datastore is not yet updated.)
+		//this query will return a slice of keys that has the user's oldEmail
+		//since we already guaranteed that users will not have the same email at the same time
+		//then this query will only return a slice of keys with one element in it.
 		q := datastore.NewQuery("Users").Filter("Email =", oldEmail).KeysOnly()
 		keys, _ := q.GetAll(ctx, nil)
 
-		datastore.Put(ctx, keys[0], &user)
+		//keys[0] because it is guaranteed that the query will only return a slice of keys
+		//with only 1 key in it.
+		_, err = datastore.Put(ctx, keys[0], &user)
 		if err != nil {
 			//server error
-			log.Errorf(ctx, "*** Error Debug: In register, failed to save newUser to datastore: %v ***", err)
+			log.Errorf(ctx, "*** Error Debug: In profile, failed to save updated user to datastore: %v ***", err)
 			http.Error(response, err.Error(), 500)
 			return
 		}
+
+		//redirect so the page will refresh and the information of the user in profile.html will
+		//be updated.
 		http.Redirect(response, request, "/profile?id="+session.Session_id, http.StatusSeeOther)
 	}
 
@@ -339,5 +352,4 @@ func profile(response http.ResponseWriter, request *http.Request){
 }
 
 //go get github.com/gorilla/mux
-
 //the session_id == uuid == cookie.Value is being passed in the url res]

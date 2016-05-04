@@ -12,16 +12,27 @@ import (
 )
 
 
+//email check is used when creating a new user and updating user info
 func email_check(response http.ResponseWriter, request *http.Request) {
 	ctx := appengine.NewContext(request)
 	var user User
 	bs, _ := ioutil.ReadAll(request.Body)
 	email := string(bs)
 
+	//perform a datastore query with the given email received by ajax
 	q := datastore.NewQuery("Users").Filter("Email =", email)
 	i, _ := q.Count(ctx)
 
+	//if the returned query contains 1 or more results then email
+	//is not unique
 	if i != 0{
+		//below if statement is a guard when the user is updating his/her information.
+		//get the user info from memcache, then compare the user email with the
+		//email we got via ajax. if it is the same then it means the user did not change
+		//his/her email.
+		//we did this because if the user did not change email then this email
+		//check will always say the email is not unique even though the email
+		//is the current email of the user.
 		item, _, err := getSession(request)
 		json.Unmarshal(item.Value, &user)
 		if err == nil{
@@ -42,14 +53,10 @@ func email_check(response http.ResponseWriter, request *http.Request) {
 func passw_check(response http.ResponseWriter, request *http.Request) {
 	bs, _ := ioutil.ReadAll(request.Body)
 	temp := string(bs)
+	//string we receive via ajax is in the form password1|password2 so
+	//we need to split it so we can compare.
 	input := strings.Split(temp, "|")
 
-	/* datastore NewKey */
-	/*
-	func NewKey(ctx context.Context, kind, name string, id int64, parent *Key) *Key
-		NewKey creates a new key. kind cannot be empty. At least one of name and id must be zero. 
-		If both are zero, the key returned is incomplete. parent must either be a complete key or nil.
-	*/
 
 	if input[0] == "" || input[1] == "" {
 		io.WriteString(response, "false")
@@ -63,10 +70,4 @@ func passw_check(response http.ResponseWriter, request *http.Request) {
 		io.WriteString(response, "false")
 		return
 	}
-
-	/*if err != nil && input[1] == input[2] || input[1] == "" || input[2] == ""{
-		io.WriteString(response, "false")
-	} else {
-		io.WriteString(response, "true")
-	}*/
 }

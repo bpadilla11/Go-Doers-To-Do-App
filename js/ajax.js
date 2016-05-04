@@ -26,12 +26,12 @@ email.addEventListener('input', function(){
 });
 
 
-//password match
+//check password confirmation
+//one for password1 and password2
 password1.addEventListener('input', function(){
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', '/api/passw_check');
 	xhr.send(password1.value + "|" + password2.value);
-	console.log(email.value + "|" + password1.value + "|" + password2.value)
 	xhr.addEventListener('readystatechange', function(){
 		if (xhr.readyState === 4 && xhr.status === 200){
 			var err = xhr.responseText;
@@ -51,7 +51,6 @@ password2.addEventListener('input', function(){
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', '/api/passw_check');
 	xhr.send(password1.value + "|" + password2.value);
-	console.log(email.value + "|" + password1.value + "|" + password2.value)
 	xhr.addEventListener('readystatechange', function(){
 		if (xhr.readyState === 4 && xhr.status === 200){
 			var err = xhr.responseText;
