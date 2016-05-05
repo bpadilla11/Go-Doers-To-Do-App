@@ -5,7 +5,6 @@ import (
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
-	//"google.golang.org/appengine/memcache"
 	"encoding/json"
 	"google.golang.org/cloud/storage"
 	"io"
@@ -72,14 +71,20 @@ func todo(response http.ResponseWriter, request *http.Request) {
 
 			//only allow jpeg, jpg or png files
 			ext := hdr.Filename[strings.LastIndex(hdr.Filename, ".")+1:]
-			switch ext {
-				case "jpg", "jpeg", "png":
+			if ext != "png" && ext != "jpg" && ext != "jpeg" {
+				log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
+				session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
 					
-				default:
-					log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
-					session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
-					tpl.ExecuteTemplate(response, "dash.html", session)
-					return
+				todo := ToDo{
+					UserId:  0, 
+					Content: " ",
+					Photo:   " ",
+				}
+				err = json.NewEncoder(response).Encode(todo)
+
+				//show error here
+
+				return
 			}
 
 			fileName = strconv.Itoa(int(user.Id)) + "/" + hdr.Filename
@@ -106,15 +111,29 @@ func todo(response http.ResponseWriter, request *http.Request) {
 				tpl.ExecuteTemplate(response, "dash.html", session)
 				return
 			}
-		}
 
-		todo := ToDo{
-			UserId:  user.Id, 
-			Content: content,
-			Photo:   fileName,
+
+			query := &storage.Query{ Delimiter: strconv.Itoa(int(user.Id)) + "/" + fileName }
+			objs, _ := client.Bucket(gcsBucket).List(ctx, query)
+
+			var s string
+			for _, obj := range objs.Results {
+				s = obj.MediaLink
+			}
+
+			todo := ToDo{
+				UserId:  user.Id, 
+				Content: content,
+				Photo:   s,
+			}
+			key := datastore.NewIncompleteKey(ctx, "Todos", nil)
+			key, err = datastore.Put(ctx, key, &todo)
+
+			//todo. = key.IntID()
+			// send back to user
+			err = json.NewEncoder(response).Encode(todo)
+
 		}
-		key := datastore.NewIncompleteKey(ctx, "Todos", nil)
-		key, err = datastore.Put(ctx, key, &todo)
 	}
 
 }

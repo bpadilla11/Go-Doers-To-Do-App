@@ -24,23 +24,36 @@ function showTodos(){
 	todo_list.innerHTML = "";
 	for(var i = 0; i < Todos.length; i++) {
 		var h2 = document.createElement("h2");
+		var div = document.createElement("div");
+		var img = document.createElement("img");
+		img.setAttribute("src", Todos[i].Photo);
 		h2.innerHTML = Todos[i].Content;
-		todo_list.appendChild(h2);
+		div.appendChild(h2);
+		div.appendChild(img);
+		todo_list.appendChild(div);
 	}
 }
 
 
-    // add new item
-    todo_submit.addEventListener('click', function (e) {
-       	var formData = new FormData();
-       	var content = document.querySelector('#todo-content').value;
-	    var file = document.querySelector('#todo-image').files[0];
-	    var xhr = new XMLHttpRequest(); 
-	    formData.append('content', content);
-		formData.append('file', file);
-		xhr.open('POST', '/todo');
-		xhr.send(formData);
-    });
+// add new item
+todo_submit.addEventListener('click', function (e) {
+    var formData = new FormData();
+    var content = document.querySelector('#todo-content').value;
+	var file = document.querySelector('#todo-image').files[0];
+	var xhr = new XMLHttpRequest(); 
+	formData.append('content', content);
+	formData.append('file', file);
+	xhr.open('POST', '/todo');
+	xhr.send(formData);
+	xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+    	    var item = JSON.parse(xhr.responseText);
+    	    if(item.UserId != 0)
+            	Todos.push(item);
+            showTodos();
+        }
+    };
+});
 
 
 /*
