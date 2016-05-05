@@ -10,8 +10,13 @@ import (
 	"golang.org/x/crypto/bcrypt" //password hashing
 	"google.golang.org/appengine/memcache"
 	"encoding/json"
+	//"google.golang.org/cloud/storage"
+	//"io"
+	//"strings"
+	//"strconv"
 )
 
+const gcsBucket = "throw-away-bucket"
 
 //globals
 var tpl *template.Template
@@ -31,6 +36,7 @@ func init() {
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
 	r.HandleFunc("/api/passw_check", passw_check)
+	r.HandleFunc("/todo", todo)
 
 	r.Handle("/favicon.ico", http.NotFoundHandler())
 
@@ -103,22 +109,12 @@ func logout(response http.ResponseWriter, request *http.Request){
 
 
 func dashboard(response http.ResponseWriter, request *http.Request){
-	ctx := appengine.NewContext(request)
+	//ctx := appengine.NewContext(request)
 	var session Session
 	var user User
-	//get session from memcache -> session.go
-	_, session_id, err := getSession(request)
-	//no session found anywhere(means not login)
-	if err != nil {
-		//redirect to index
-		http.Redirect(response, request, `/`, http.StatusSeeOther)
-		return //is this needed?
-	}
-
-	session.Session_id = session_id
-	//retrieve session in memcache
-	item, err := memcache.Get(ctx, session_id)
-
+	//var todo ToDo
+	
+	item, session_id, err := getSession(request)
 	//if no session was found in memcache then invoke logout that
 	//effectively deletes the session.
 	//this is a guard for when a cookie is not found, logout which calls deleteSession
@@ -128,10 +124,70 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 		logout(response, request)
 		return //probably dont need this
 	}
-
+	
 	//found a session, then unmarshal the user
 	json.Unmarshal(item.Value, &user)
 	session.User = user
+	session.Session_id = session_id
+
+/*
+	if request.Method == "POST" {
+		content := request.FormValue("todo-content")
+		src, hdr, err := request.FormFile("todo-image")
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In dashboard, in POST request.FormFile: %v ***", err)
+			http.Redirect(response, request, "/dashboard?id="+session_id, http.StatusSeeOther)
+		}
+		defer src.Close()
+
+		//only allow jpeg, jpg or png files
+		ext := hdr.Filename[strings.LastIndex(hdr.Filename, ".")+1:]
+		switch ext {
+			case "jpg", "jpeg", "png":
+				
+			default:
+				log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
+				session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
+				tpl.ExecuteTemplate(response, "dash.html", session)
+				return
+		}
+
+		fileName := strconv.Itoa(int(user.Id)) + "/" + hdr.Filename
+		
+		client, err := storage.NewClient(ctx)
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In dashboard, storage.NewClient: %s", err)
+			session.Message = "Oooops! Something went wrong try again"
+			tpl.ExecuteTemplate(response, "dash.html", session)
+			return
+		}
+		defer client.Close()
+
+		writer := client.Bucket(gcsBucket).Object(fileName).NewWriter(ctx)
+		writer.ACL = []storage.ACLRule{
+			{storage.AllUsers, storage.RoleReader},
+		}
+		
+		io.Copy(writer, src)
+		err = writer.Close()
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In dashboard, writer.Close: %s", err)
+			session.Message = "Oooops! Something went wrong try again"
+			tpl.ExecuteTemplate(response, "dash.html", session)
+			return
+		}
+
+		todo := ToDo{
+			UserId:  user.Id, 
+			Content: content,
+			Photo:   fileName,
+		}
+		key := datastore.NewIncompleteKey(ctx, "Todos", nil)
+		key, err = datastore.Put(ctx, key, &todo) 
+	}
+*/
+
+
 	//pass session which has the user information to dash.html 
 	tpl.ExecuteTemplate(response, "dash.html", session)
 }
@@ -196,6 +252,8 @@ func register(response http.ResponseWriter, request *http.Request){
 
 		//generate new key to use for saving the user to datastore
 		key := datastore.NewIncompleteKey(ctx, "Users", nil)
+		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
+		newUser.Id = key.IntID()
 		key, err = datastore.Put(ctx, key, &newUser) //save user to datastore
 
 		if err != nil {

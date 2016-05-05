@@ -20,7 +20,7 @@
 			 <header>
                 <!-- navbar contains the logo and the sign in inputs  -->
                 <div id="navbar">
-                    <div id="logo"><a href="/" >ToDo's&Dont's</a></div>
+                    <div id="logo"><a href="/dashboard?id={{.Session_id}}" >ToDo's&Dont's</a></div>
                     <div class="nd"><a class="btn" href="/profile?id={{.Session_id}}">{{.User.Email}}</a><a class="btn" href="/logout">Logout</a></div>
                     <!-- hamburger only shows up when the width of the screen is < 768px -->
                     <!-- inline svg for extra credit -->
@@ -76,10 +76,7 @@
 			    </div>
 			</div>
 
-		    <footer>
-		    	 <p>&copy; CSCI 130 Project Spring 2016: Sergio Avila, Carlos Daccarett, Brian Padilla, Edwin Perea, Juan Taruc</p>
-                 <p><a href="#">Home</a>|<a href="#">About</a>|<a href="#">Link1</a>|<a href="#">Link2</a></p>
-        	</footer>
+		    
     </body>
     <script type="text/javascript" src="../js/ajax.js"></script>
 </html>

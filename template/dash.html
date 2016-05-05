@@ -19,7 +19,7 @@
 
             <header>
                 <div id="navbar">
-                    <div id="logo"><a href="#" >ToDo's&Dont's</a></div>
+                    <div id="logo"><a href="/dashboard?id={{.Session_id}}" >ToDo's&Dont's</a></div>
                     <div class="nd">
                         <a class="btn" href="/profile?id={{.Session_id}}">{{.User.Email}}</a>
                         <a class="btn" href="/logout">Logout</a>
@@ -33,10 +33,25 @@
                         <a class="btn" href="/logout">Logout</a>
                     </form>
                 </div>
+                <div id="login_status_modal" class="modalDialog">
+                    <div>
+                        <script type="text/javascript">show_login_modal({{.Message}});</script>
+                        <a class="close" onclick="close_login_modal();">X</a>
+                        <h1>{{.Message}}</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
+                    </div>
+                </div>
             </header>
             
-            <div id="sidebar">
-
+            <div id="nm">
+                <div id="center-content">
+                    <form id="todo-form" enctype="multipart/form-data">
+                        <input id="todo-content" name="todo-content" type="text" placeholder="Add New">
+                        <input id="todo-image"  name="todo-image" type="file">
+                        <a id="todo-submit" class="btn" href="#">Add</a>
+                    </form>
+                    <div id="todo-list"></div>
+                </div>
             </div>
 
         </div>
@@ -48,4 +63,5 @@
         </footer>
     </body>
     <script type="text/javascript" src="js/main.js"></script>
+     <script type="text/javascript" src="../js/todo.js"></script>
 </html>
