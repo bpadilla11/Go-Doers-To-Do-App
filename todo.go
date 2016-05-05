@@ -63,14 +63,17 @@ func todo(response http.ResponseWriter, request *http.Request) {
 	}
 
 	if request.Method == "POST" {
+
 		request.ParseMultipartForm(10000000000)
 		content := request.FormValue("content")
 		src, hdr, err := request.FormFile("file")
+		
 		if err == nil {		
 			defer src.Close()
 
 			//only allow jpeg, jpg or png files
 			ext := hdr.Filename[strings.LastIndex(hdr.Filename, ".")+1:]
+			log.Infof(ctx, ext)
 			if ext != "png" && ext != "jpg" && ext != "jpeg" {
 				log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
 				session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
@@ -98,9 +101,10 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			}
 			defer client.Close()
 
+
 			writer := client.Bucket(gcsBucket).Object(fileName).NewWriter(ctx)
 			writer.ACL = []storage.ACLRule{
-				{storage.AllUsers, storage.RoleReader},
+				{storage.AllUsers, storage.RoleOwner},
 			}
 			
 			io.Copy(writer, src)
@@ -134,6 +138,14 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			err = json.NewEncoder(response).Encode(todo)
 
 		}
+		todo := ToDo{
+				UserId:  user.Id, 
+				Content: content,
+				Photo:   "",
+			}
+		key := datastore.NewIncompleteKey(ctx, "Todos", nil)
+		key, err = datastore.Put(ctx, key, &todo)
+		err = json.NewEncoder(response).Encode(todo)
 	}
 
 }

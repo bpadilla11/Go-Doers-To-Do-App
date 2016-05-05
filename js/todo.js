@@ -40,16 +40,16 @@ todo_submit.addEventListener('click', function (e) {
     var formData = new FormData();
     var content = document.querySelector('#todo-content').value;
 	var file = document.querySelector('#todo-image').files[0];
-	var xhr = new XMLHttpRequest(); 
+	var xhr = new XMLHttpRequest();
 	formData.append('content', content);
 	formData.append('file', file);
 	xhr.open('POST', '/todo');
 	xhr.send(formData);
 	xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-    	    var item = JSON.parse(xhr.responseText);
-    	    if(item.UserId != 0)
-            	Todos.push(item);
+    	    var item = xhr.responseText;
+            item = JSON.parse(item);
+            Todos.push(item);
             showTodos();
         }
     };

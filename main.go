@@ -16,7 +16,7 @@ import (
 	//"strconv"
 )
 
-const gcsBucket = "throw-away-bucket"
+const gcsBucket = "todolist-1292.appspot.com"
 
 //globals
 var tpl *template.Template
