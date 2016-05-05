@@ -10,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt" //password hashing
 	"google.golang.org/appengine/memcache"
 	"encoding/json"
+	"github.com/paddycarey/gophy"
 )
 
 
@@ -134,6 +135,18 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 	session.User = user
 	//pass session which has the user information to dash.html 
 	tpl.ExecuteTemplate(response, "dash.html", session)
+
+	co := &gophy.ClientOptions{}
+    client := gophy.NewClient(co)
+
+    gifs, err := gophy.TrendingGifs("", 20)
+    if err != nil {
+        panic(err)
+    }
+
+    for _, gif := range gifs {
+        fmt.Printf("%s: %s", gif.Id, gif.URL)
+    }
 }
 
 
