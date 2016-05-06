@@ -80,8 +80,8 @@ func todo(response http.ResponseWriter, request *http.Request) {
 					
 				todo := ToDo{
 					UserId:  0, 
-					Content: " ",
-					Photo:   " ",
+					Content: "",
+					Photo:   "invalid",
 				}
 				err = json.NewEncoder(response).Encode(todo)
 
@@ -104,7 +104,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 
 			writer := client.Bucket(gcsBucket).Object(fileName).NewWriter(ctx)
 			writer.ACL = []storage.ACLRule{
-				{storage.AllUsers, storage.RoleOwner},
+				{storage.AllUsers, storage.RoleReader},
 			}
 			
 			io.Copy(writer, src)
@@ -136,7 +136,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			//todo. = key.IntID()
 			// send back to user
 			err = json.NewEncoder(response).Encode(todo)
-
+			return
 		}
 		todo := ToDo{
 				UserId:  user.Id, 

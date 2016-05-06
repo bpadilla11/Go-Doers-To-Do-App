@@ -2,6 +2,7 @@ var todo_content = document.querySelector("#todo-content");
 var todo_image = document.querySelector("#todo-image");
 var todo_list = document.querySelector("#todo-list");
 var todo_submit = document.querySelector("#todo-submit");
+var todo_form = document.querySelector("#todo-form");
 
 var Todos = []
 
@@ -38,18 +39,27 @@ function showTodos(){
 // add new item
 todo_submit.addEventListener('click', function (e) {
     var formData = new FormData();
-    var content = document.querySelector('#todo-content').value;
-	var file = document.querySelector('#todo-image').files[0];
+    var content = todo_content.value;
+	var file = todo_image.files[0];
 	var xhr = new XMLHttpRequest();
 	formData.append('content', content);
 	formData.append('file', file);
 	xhr.open('POST', '/todo');
 	xhr.send(formData);
+	todo_content.value = "";
+	todo_image.value = null;
+	todo_submit.className = "btn todo-submit-disable";
+	todo_submit.innerHTML = "Please wait...";
 	xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
     	    var item = xhr.responseText;
             item = JSON.parse(item);
-            Todos.push(item);
+            if(item.Photo != "invalid")
+            	Todos.push(item);	
+            else
+            	show_login_modal("invalid");
+            todo_submit.className = "btn";
+            todo_submit.innerHTML = "Add";
             showTodos();
         }
     };
