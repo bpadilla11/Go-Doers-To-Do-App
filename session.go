@@ -119,14 +119,6 @@ func deleteSession(response http.ResponseWriter, request *http.Request) {
 
 	//no cookie
 	if err != nil {
-		//if their is no cookie in the browser then use the session_id from url
-		//to reference the memcache item
-		/*item := memcache.Item{
-			Key:   session.Session_id,
-			Value: []byte(""),
-			Expiration: time.Duration(1 * time.Microsecond),
-		}
-		memcache.Set(ctx, &item)*/
 		memcache.Delete(ctx, session_id)
 		return
 	}
@@ -134,12 +126,5 @@ func deleteSession(response http.ResponseWriter, request *http.Request) {
 	cookie.MaxAge = -1
 	http.SetCookie(response, cookie)
 	memcache.Delete(ctx, cookie.Value)
-	//if cookie exists then use the cookie.Value to reference the memcache item
-	/*item := memcache.Item{
-		Key:   cookie.Value,
-		Value: []byte(""),
-		Expiration: time.Duration(1 * time.Microsecond),
-	}
-	memcache.Set(ctx, &item)*/
 }
 

@@ -1,17 +1,12 @@
-#sidebar {
-    flex-grow: 1;
+#nm { 
     margin-top: 70px;
-    height: 100vh;
-    background-color: grey;
-    max-width: 35vh;
-    overflow-y: scroll;
+    margin-bottom: 5px;
+    flex-grow: 1;
 }
 
 
-
-#sidebar-content {
-     /* fill center */
-    
+#center-content {
+    /* fill center */
     font-size: 1.6rem;
     background-color: #f5f5f5;
     padding: 20px;
@@ -21,18 +16,4 @@
     justify-content: center;
     align-items: center;
     font-family: sans-serif;
-}
-
-
-/* align this elements as the logo and signin form in navbar*/
-#sidebar-content h1 {
-      margin-right: 10%;
-      margin-left: 10%;
-
-}
-
-
-#sidebar-content-title{
-    font-size: 50px;
-    font-weight: 300;
 }

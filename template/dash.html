@@ -6,6 +6,7 @@
         <title>ToDo's&Dont's</title>
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/dash.css">
+        <link rel="stylesheet" href="css/todo.css">
         <script type="text/javascript" src="../js/main.js"></script>
        <!-- this is applied when screen width is < 768px -->
         <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
@@ -19,7 +20,7 @@
 
             <header>
                 <div id="navbar">
-                    <div id="logo"><a href="#" >ToDo's&Dont's</a></div>
+                    <div id="logo"><a href="/dashboard?id={{.Session_id}}" >ToDo's&Dont's</a></div>
                     <div class="nd">
                         <a class="btn" href="/profile?id={{.Session_id}}">{{.User.Email}}</a>
                         <a class="btn" href="/logout">Logout</a>
@@ -27,16 +28,30 @@
                     <svg id="hamburger" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onclick="show_dropdown_form();" ><path d="M4,10h24c1.104,0,2-0.896,2-2s-0.896-2-2-2H4C2.896,6,2,6.896,2,8S2.896,10,4,10z M28,14H4c-1.104,0-2,0.896-2,2  s0.896,2,2,2h24c1.104,0,2-0.896,2-2S29.104,14,28,14z M28,22H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h24c1.104,0,2-0.896,2-2  S29.104,22,28,22z"/></svg>
                 </div>
                 <!-- dropdown-form display MUST be none -->
-                <div id="dropdown-form" style="display: none;">
+                <div id="dropdown-form"  style="display: none;">
                     <form class="nm">
                         <a class="btn" href="/profile">{{.User.Email}}</button>
                         <a class="btn" href="/logout">Logout</a>
                     </form>
                 </div>
+                <div id="login_status_modal" class="modalDialog">
+                    <div>
+                        <a class="close" onclick="close_login_modal();">X</a>
+                        <h1>.jpeg, .jpg or .png files only</h1>
+                        <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
+                    </div>
+                </div>
             </header>
             
-            <div id="sidebar">
-
+            <div id="nm">
+                <div id="center-content">
+                    <form id="todo-form" enctype="multipart/form-data">
+                        <input id="todo-content" name="todo-content" type="text" placeholder="Add New">
+                        <input id="todo-image"  name="todo-image" type="file">
+                        <a id="todo-submit" class="btn" href="#">Add</a>
+                    </form>
+                    <div id="todo-list"></div>
+                </div>
             </div>
 
         </div>
@@ -48,4 +63,5 @@
         </footer>
     </body>
     <script type="text/javascript" src="js/main.js"></script>
+     <script type="text/javascript" src="../js/todo.js"></script>
 </html>
