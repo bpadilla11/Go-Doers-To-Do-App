@@ -22,7 +22,6 @@ func init() {
 	tpl = template.Must(tpl.ParseGlob("template/*.html"))
 
 	r := mux.NewRouter()
-	http.Handle("/", r)
 	r.HandleFunc("/", index)
 	r.HandleFunc("/login", login)
 	r.HandleFunc("/logout", logout)
