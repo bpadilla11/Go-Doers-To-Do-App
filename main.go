@@ -188,17 +188,7 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 	//pass session which has the user information to dash.html 
 	tpl.ExecuteTemplate(response, "dash.html", session)
 
-	co := &gophy.ClientOptions{}
-    client := gophy.NewClient(co)
-
-    gifs, err := gophy.TrendingGifs("", 20)
-    if err != nil {
-        panic(err)
-    }
-
-    for _, gif := range gifs {
-        fmt.Printf("%s: %s", gif.Id, gif.URL)
-    }
+	
 }
 
 
