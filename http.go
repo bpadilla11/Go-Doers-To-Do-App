@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/", handleGetGif)
+	//http.HandleFunc("/", handleGetGif)
 }
 
 func main(){
