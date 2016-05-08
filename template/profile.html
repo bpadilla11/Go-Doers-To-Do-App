@@ -50,11 +50,11 @@
 			    		<form method="POST" action="/profile?id={{.Session_id}}">
                             <h1 id="edit-profile-head">Edit Profile</h1><br>
                             <p id="edit-profile-head-2">First Name</p>
-                            <input type="text" name="firstname" value="{{.User.FirstName}}"required>
+                            <input type="text" name="firstname" value="{{.User.FirstName}}" autocomplete="off" required>
                             <p id="edit-profile-head-2">Last Name</p>
-                            <input type= "text" name="lastname" value="{{.User.LastName}}" required>
+                            <input type= "text" name="lastname" value="{{.User.LastName}}" autocomplete="off" required>
                             <p id="edit-profile-head-2">Email</p>
-                            <input id="register-email" type="email" name="email" value="{{.User.Email}}" required>
+                            <input id="register-email" type="email" name="email" value="{{.User.Email}}" autocomplete="off" required>
                             <a class="btn pw-btn" href="#PasswordChange">Change Password</a>
                             <div id="PasswordClose">
                                 <div id="PasswordChange" class="open">

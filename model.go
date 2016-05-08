@@ -1,6 +1,5 @@
 package GodoersToDo
 
-
 type User struct {
 	Id        int64
 	FirstName string
@@ -19,8 +18,10 @@ type Session struct {
 
 
 type ToDo struct {
-	ToDoId  int64  `datastore:"-"`
+	ToDoId  int64
 	UserId  int64
 	Content string
-	Photo   string
+	Date    string
+	Photo_Link   string
+	Photo_Media  string
 }

@@ -37,6 +37,7 @@ func init() {
 	r.HandleFunc("/api/email_check", email_check)
 	r.HandleFunc("/api/passw_check", passw_check)
 	r.HandleFunc("/todo", todo)
+	r.HandleFunc("/todo?todo=", todo)
 
 	r.Handle("/favicon.ico", http.NotFoundHandler())
 

@@ -10,6 +10,7 @@ import (
 	"io"
 	"strings"
 	"strconv"
+	"time"
 )
 
 
@@ -37,7 +38,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 	var fileName string
 	
 	if request.Method == "GET" {
-		q := datastore.NewQuery("Todos").Filter("UserId =", user.Id)
+		q := datastore.NewQuery("Todos").Filter("UserId =", user.Id).Order("Date")
 		iterator := q.Run(ctx)
 		todos := make([]ToDo, 0)
 		for{
@@ -81,7 +82,8 @@ func todo(response http.ResponseWriter, request *http.Request) {
 				todo := ToDo{
 					UserId:  0, 
 					Content: "",
-					Photo:   "invalid",
+					Photo_Link: "invalid",
+					Photo_Media:"invalid", 
 				}
 				err = json.NewEncoder(response).Encode(todo)
 
@@ -128,24 +130,39 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			todo := ToDo{
 				UserId:  user.Id, 
 				Content: content,
-				Photo:   s,
+				Date: time.Now().Format("Mon Jan 2 2006 03:04 PM"),
+				Photo_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + fileName,
+				Photo_Media: s,
 			}
 			key := datastore.NewIncompleteKey(ctx, "Todos", nil)
 			key, err = datastore.Put(ctx, key, &todo)
-
-			//todo. = key.IntID()
-			// send back to user
+			todo.ToDoId = key.IntID()
+			key, err = datastore.Put(ctx, key, &todo)
 			err = json.NewEncoder(response).Encode(todo)
 			return
 		}
 		todo := ToDo{
 				UserId:  user.Id, 
 				Content: content,
-				Photo:   "",
+				Date: time.Now().Format("Mon Jan 2 2006 03:04 PM"),
+				Photo_Link:   "",
+				Photo_Media:  "",
 			}
 		key := datastore.NewIncompleteKey(ctx, "Todos", nil)
 		key, err = datastore.Put(ctx, key, &todo)
+		todo.ToDoId = key.IntID()
+		key, err = datastore.Put(ctx, key, &todo)
 		err = json.NewEncoder(response).Encode(todo)
+	}
+
+	if request.Method == "DELETE" {
+		todo_id, _ := strconv.ParseInt(request.FormValue("todo"), 10, 64)
+		key := datastore.NewKey(ctx, "Todos", "", todo_id, nil)
+		err = datastore.Delete(ctx, key)
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In todo, Delete: %s", err)
+		}
+		io.WriteString(response, "done")
 	}
 
 }
