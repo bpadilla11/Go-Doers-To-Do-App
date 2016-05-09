@@ -1,13 +1,14 @@
 var file_list = document.querySelector("#file-list");
 var Files = [];
 
+//get the files from the gcs for the specific user
 function getFiles() {
 	var xhr = new XMLHttpRequest();
         xhr.open("GET", "/api/filehelper");
         xhr.send(null);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                Files = JSON.parse(xhr.responseText);
+                Files = JSON.parse(xhr.responseText); //list of files
                 showFiles();
             }
         }
@@ -15,6 +16,21 @@ function getFiles() {
 
 getFiles();
 
+//show the files from the gcs for the specific user
+/*
+<div id="file-list">
+	<figure>
+		<a href="..." target="_blank">
+			<img src="...">
+		</a>
+		<figcaption>
+			<a href="..." class="link">Download</a>
+			<a href="..." target="_blank" class="name">filename</a>
+			<a class="delete-file" href="#" id="...">Delete</a>
+		</figcaption>
+	</figure>
+</div>
+*/
 function showFiles(){
 	file_list.innerHTML = "";
 	if(Files != null)
@@ -58,6 +74,7 @@ function showFiles(){
 }
 
 
+//delete a file effectively deleting it from the gcs via our go server
 (function () {
     file_list.addEventListener("click", function (evt) {
     	if(evt.target.className == "delete-file"){

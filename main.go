@@ -353,9 +353,12 @@ func profile(response http.ResponseWriter, request *http.Request){
 }
 
 
+//files handler just serves the files.html
+//the action happens in filehelper handler which handles ajax requests from file.js
 func files(response http.ResponseWriter, request *http.Request) {
 	var user User
 	var session Session
+	//get the session 
 	ctx := appengine.NewContext(request)
 	item, session_id, err := getSession(request)
 	json.Unmarshal(item.Value, &user)
@@ -368,61 +371,15 @@ func files(response http.ResponseWriter, request *http.Request) {
 		logout(response, request)
 	}
 
-	
-	tpl.ExecuteTemplate(response, "files.html", session)
-	/*query := &storage.Query{ Prefix:  strconv.Itoa(int(user.Id)) + "/" }
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		log.Errorf(ctx, "*** Error Debug: In files, storage.NewClient: %s", err)
-		session.Message = "Oooops! Something went wrong try again"
-		tpl.ExecuteTemplate(response, "files.html", session)
-		return
-	}
-	defer client.Close()
-
-	objs, _ := client.Bucket(gcsBucket).List(ctx, query)
-	//strconv.Itoa(int(user.Id)) + "/" + fileName
-
-	if request.Method == "DELETE" {
-		fileName, _ := strconv.ParseInt(request.FormValue("filename"), 10, 64)
-		err = client.Bucket(gcsBucket).Object( strconv.Itoa(int(user.Id)) + "/" + strconv.Itoa(int(fileName))).Delete(ctx)
-		if err != nil {
-			log.Errorf(ctx, "*** Error Debug: In files, delete: %s", err)
-			session.Message = "Oooops! Something went wrong try again"
-			return
-		}
-		var files_list  []File
-		for _, obj := range objs.Results {
-			fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
-			file := File{
-				Name: fileName,
-				Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
-				Download_Link: obj.MediaLink,
-			}
-			files_list = append(files_list, file)
-		}
-
-	}
-
-	var files_list  []File
-	for _, obj := range objs.Results {
-		fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
-		file := File{
-			Name: fileName,
-			Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
-			Download_Link: obj.MediaLink,
-		}
-		files_list = append(files_list, file)
-	}	
-	session.Files = files_list
-	tpl.ExecuteTemplate(response, "files.html", session)*/
-	
+	tpl.ExecuteTemplate(response, "files.html", session)	
 }
 
 
+//handles ajax request sent by files.js
 func filehelper(response http.ResponseWriter, request *http.Request) {
 	var user User
 	var session Session
+	//get the session
 	ctx := appengine.NewContext(request)
 	item, session_id, err := getSession(request)
 	json.Unmarshal(item.Value, &user)
@@ -434,6 +391,8 @@ func filehelper(response http.ResponseWriter, request *http.Request) {
 		log.Errorf(ctx, "*** Error Debug: In files, user is impossible to find: %v ***", err)
 		logout(response, request)
 	}
+
+	//create a new object handler
 	client, err := storage.NewClient(ctx)
 	if err != nil {
 		log.Errorf(ctx, "*** Error Debug: In files, storage.NewClient: %s", err)
@@ -443,30 +402,38 @@ func filehelper(response http.ResponseWriter, request *http.Request) {
 	}
 	defer client.Close()
 
+	//query the gcs so we could get all the files of the LOGGED IN user
+	//query delimiter is user.Id/
 	query := &storage.Query{ Prefix:  strconv.Itoa(int(user.Id)) + "/" }
-	objs, _ := client.Bucket(gcsBucket).List(ctx, query)
+	objs, _ := client.Bucket(gcsBucket).List(ctx, query) //return a list of file objects
 
+	//GET method renders all the files to the browser
 	if request.Method == "GET" {
-		var files_list  []File
+		var files_list []File
 		for _, obj := range objs.Results {
 			fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
 			file := File{
 				Name: fileName,
+				//build the file link manually. Don't know if good practice, but heck it works.
 				Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
 				Download_Link: obj.MediaLink,
 			}
 			files_list = append(files_list, file)
 		}
 		
-		err = json.NewEncoder(response).Encode(files_list)	
+		//send the files_list to files.js
+		err = json.NewEncoder(response).Encode(files_list)
 	}
 
+	//delete a file
 	if request.Method == "DELETE" {
-		filename := request.FormValue("filename")
+		filename := request.FormValue("filename") //filename is passed and retrieve here from the url
+		//again build the filename in the form user.Id/filename and delete it
 		err = client.Bucket(gcsBucket).Object( strconv.Itoa(int(user.Id)) + "/" + filename).Delete(ctx)
 		if err != nil {
 			log.Errorf(ctx, "*** Error Debug: In filehelper, Delete: %s", err)
 		}
+		//any string here
 		io.WriteString(response, "done")
 	}
 }

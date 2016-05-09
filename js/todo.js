@@ -6,6 +6,8 @@ var todo_form = document.querySelector("#todo-form");
 
 var Todos = [];
 
+
+//get the todos objects from the server
 function getTodos() {
 	var xhr = new XMLHttpRequest();
         xhr.open("GET", "/todo?todo=");
@@ -20,6 +22,19 @@ function getTodos() {
 
 getTodos();
 
+//create html element needed to render todo objects like this.
+/*
+<div id="todo-list">
+	<div class="todo-style">
+		<a href="#" class="delete" id="...">X</a>
+		<p>1212</p><p class="time">Mon May 9 2016 04:29:00 PM</p>
+	</div>
+	<div class="todo-style">
+		<a href="#" class="delete" id="...">X</a>
+		<p>12</p><p class="time">Mon May 9 2016 04:29:00 PM</p>
+	</div>
+</div>
+*/
 function showTodos(){
 	todo_list.innerHTML = "";
 	for(var i = 0; i < Todos.length; i++) {
@@ -45,7 +60,7 @@ function showTodos(){
 
 		p.innerHTML = Todos[i].Content;
 
-		time.innerHTML = "Added: " + Todos[i].Date;
+		time.innerHTML = Todos[i].Date;
 		time.className = "time";
 
 		div.appendChild(a_delete);
@@ -59,6 +74,7 @@ function showTodos(){
 }
 
 
+//to add a todo object
 todo_submit.addEventListener('click', function (e) {
     var formData = new FormData();
     var content = todo_content.value;
@@ -88,6 +104,7 @@ todo_submit.addEventListener('click', function (e) {
 });
 
 
+//delete object from the server
 (function () {
     todo_list.addEventListener("click", function (evt) {
         var id = evt.target.id;
