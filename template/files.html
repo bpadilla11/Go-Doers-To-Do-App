@@ -6,7 +6,7 @@
         <title>Go-Doers</title>
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/dash.css">
-        <link rel="stylesheet" href="css/todo.css">
+        <link rel="stylesheet" href="css/files.css">
         <script type="text/javascript" src="../js/main.js"></script>
        <!-- this is applied when screen width is < 768px -->
         <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
@@ -38,8 +38,9 @@
                 </div>
                 <div id="login_status_modal" class="modalDialog">
                     <div>
+                        <script type="text/javascript">show_login_modal({{.Message}});</script>
                         <a class="close" onclick="close_login_modal();">X</a>
-                        <h1>.jpeg, .jpg or .png files only</h1>
+                        <h1>{{.Message}}</h1>
                         <button id="modal-close-btn" class="btn" onclick="close_login_modal();">Close</button>
                     </div>
                 </div>
@@ -47,19 +48,21 @@
             
             <div id="nm">
                 <div id="center-content">
-                   
-                    <form id="todo-form" enctype="multipart/form-data">
-                        <input id="todo-content" name="todo-content" type="text" autocomplete="off" placeholder="Add New">
-                        <input id="todo-image"  name="todo-image" type="file">
-                        <a id="todo-submit" class="btn" href="#">Add</a>
-                    </form>
-                    <hr>
-                    <div id="todo-list"></div>                    
+                    <div id="file-list"></div>
+                   <!--{{ range $file := .Files }}
+                        <figure>
+                            <a href="{{.Source_Link}}" target="_blank"><img class="photo" src={{.Download_Link}}></a>
+                            <figcaption>
+                                <a class="link" href="{{.Download_Link}}" >{{.Name}}</a>
+                                <a id="" class="delete-file" href="#">Delete</a>
+                            </figcaption>
+                        </figure>
+                {{ end }}-->                
                 </div>
             </div>
 
         </div>
     </body>
     <script type="text/javascript" src="js/main.js"></script>
-     <script type="text/javascript" src="../js/todo.js"></script>
+    <script type="text/javascript" src="js/files.js"></script>
 </html>

@@ -4,11 +4,11 @@ var todo_list = document.querySelector("#todo-list");
 var todo_submit = document.querySelector("#todo-submit");
 var todo_form = document.querySelector("#todo-form");
 
-var Todos = []
+var Todos = [];
 
 function getTodos() {
 	var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/todo");
+        xhr.open("GET", "/todo?todo=");
         xhr.send(null);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
@@ -76,7 +76,7 @@ todo_submit.addEventListener('click', function (e) {
         if (xhr.readyState === 4) {
     	    var item = xhr.responseText;
             item = JSON.parse(item);
-            if(item.Photo != "invalid")
+            if(item.Photo_Media != "invalid")
             	Todos.push(item);	
             else
             	show_login_modal("invalid");

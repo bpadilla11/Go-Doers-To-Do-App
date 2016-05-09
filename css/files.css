@@ -1,0 +1,63 @@
+#center-content {
+	background-color: white;
+}
+
+
+.photo {
+	width: 300px;
+	height: 100px;
+}
+
+figcaption {
+	display: flex;
+	width: 100%;
+}
+
+.link {
+	color: #0ebfe9;
+	border-radius: 5px;
+	padding: 1px;
+}
+
+.link:hover {
+	background-color: #0ebfe9;
+	color: white;
+    transition: 0.5s ease;
+}
+
+.name{
+	color: #333;
+	border-radius: 5px;
+	padding: 1px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.name:hover {
+	background-color: #333;
+	color: white;
+    transition: 0.5s ease;
+}
+
+.delete-file {
+	margin-left: auto;
+	text-decoration: none;
+	color: 	red;
+	border-radius: 5px;
+	padding: 1px;
+}
+
+.delete-file:hover {
+	color: white;
+	background-color: red;
+	transition: 0.5s ease;
+}
+
+.deleting {
+	margin-left: auto;
+	text-decoration: none;
+	color: white;
+	background-color: red;
+	border-radius: 5px;
+	padding: 1px;
+}

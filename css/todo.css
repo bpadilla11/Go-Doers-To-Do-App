@@ -66,6 +66,7 @@ hr {
 
 
 .todo-style:hover {
+    transition: 0.5s ease;
     background-color: rgba(14, 233, 220, 0.3);
 }
 

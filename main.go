@@ -10,10 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt" //password hashing
 	"google.golang.org/appengine/memcache"
 	"encoding/json"
-	//"google.golang.org/cloud/storage"
-	//"io"
-	//"strings"
-	//"strconv"
+	"google.golang.org/cloud/storage"
+	"strconv"
+	"strings"	
+	"io"
 )
 
 const gcsBucket = "todolist-1292.appspot.com"
@@ -32,12 +32,14 @@ func init() {
 	r.HandleFunc("/dashboard", dashboard)
 	r.HandleFunc("/register", register)
 	r.HandleFunc("/profile", profile)
+	r.HandleFunc("/files", files)
 
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
 	r.HandleFunc("/api/passw_check", passw_check)
 	r.HandleFunc("/todo", todo)
 	r.HandleFunc("/todo?todo=", todo)
+	r.HandleFunc("/api/filehelper", filehelper)
 
 	r.Handle("/favicon.ico", http.NotFoundHandler())
 
@@ -130,64 +132,6 @@ func dashboard(response http.ResponseWriter, request *http.Request){
 	json.Unmarshal(item.Value, &user)
 	session.User = user
 	session.Session_id = session_id
-
-/*
-	if request.Method == "POST" {
-		content := request.FormValue("todo-content")
-		src, hdr, err := request.FormFile("todo-image")
-		if err != nil {
-			log.Errorf(ctx, "*** Error Debug: In dashboard, in POST request.FormFile: %v ***", err)
-			http.Redirect(response, request, "/dashboard?id="+session_id, http.StatusSeeOther)
-		}
-		defer src.Close()
-
-		//only allow jpeg, jpg or png files
-		ext := hdr.Filename[strings.LastIndex(hdr.Filename, ".")+1:]
-		switch ext {
-			case "jpg", "jpeg", "png":
-				
-			default:
-				log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
-				session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
-				tpl.ExecuteTemplate(response, "dash.html", session)
-				return
-		}
-
-		fileName := strconv.Itoa(int(user.Id)) + "/" + hdr.Filename
-		
-		client, err := storage.NewClient(ctx)
-		if err != nil {
-			log.Errorf(ctx, "*** Error Debug: In dashboard, storage.NewClient: %s", err)
-			session.Message = "Oooops! Something went wrong try again"
-			tpl.ExecuteTemplate(response, "dash.html", session)
-			return
-		}
-		defer client.Close()
-
-		writer := client.Bucket(gcsBucket).Object(fileName).NewWriter(ctx)
-		writer.ACL = []storage.ACLRule{
-			{storage.AllUsers, storage.RoleReader},
-		}
-		
-		io.Copy(writer, src)
-		err = writer.Close()
-		if err != nil {
-			log.Errorf(ctx, "*** Error Debug: In dashboard, writer.Close: %s", err)
-			session.Message = "Oooops! Something went wrong try again"
-			tpl.ExecuteTemplate(response, "dash.html", session)
-			return
-		}
-
-		todo := ToDo{
-			UserId:  user.Id, 
-			Content: content,
-			Photo:   fileName,
-		}
-		key := datastore.NewIncompleteKey(ctx, "Todos", nil)
-		key, err = datastore.Put(ctx, key, &todo) 
-	}
-*/
-
 
 	//pass session which has the user information to dash.html 
 	tpl.ExecuteTemplate(response, "dash.html", session)
@@ -408,5 +352,123 @@ func profile(response http.ResponseWriter, request *http.Request){
 	tpl.ExecuteTemplate(response, "profile.html", session)
 }
 
+
+func files(response http.ResponseWriter, request *http.Request) {
+	var user User
+	var session Session
+	ctx := appengine.NewContext(request)
+	item, session_id, err := getSession(request)
+	json.Unmarshal(item.Value, &user)
+	session.User = user
+	session.Session_id = session_id
+
+	if err != nil{
+		//no session found
+		log.Errorf(ctx, "*** Error Debug: In files, user is impossible to find: %v ***", err)
+		logout(response, request)
+	}
+
+	
+	tpl.ExecuteTemplate(response, "files.html", session)
+	/*query := &storage.Query{ Prefix:  strconv.Itoa(int(user.Id)) + "/" }
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Errorf(ctx, "*** Error Debug: In files, storage.NewClient: %s", err)
+		session.Message = "Oooops! Something went wrong try again"
+		tpl.ExecuteTemplate(response, "files.html", session)
+		return
+	}
+	defer client.Close()
+
+	objs, _ := client.Bucket(gcsBucket).List(ctx, query)
+	//strconv.Itoa(int(user.Id)) + "/" + fileName
+
+	if request.Method == "DELETE" {
+		fileName, _ := strconv.ParseInt(request.FormValue("filename"), 10, 64)
+		err = client.Bucket(gcsBucket).Object( strconv.Itoa(int(user.Id)) + "/" + strconv.Itoa(int(fileName))).Delete(ctx)
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In files, delete: %s", err)
+			session.Message = "Oooops! Something went wrong try again"
+			return
+		}
+		var files_list  []File
+		for _, obj := range objs.Results {
+			fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
+			file := File{
+				Name: fileName,
+				Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
+				Download_Link: obj.MediaLink,
+			}
+			files_list = append(files_list, file)
+		}
+
+	}
+
+	var files_list  []File
+	for _, obj := range objs.Results {
+		fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
+		file := File{
+			Name: fileName,
+			Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
+			Download_Link: obj.MediaLink,
+		}
+		files_list = append(files_list, file)
+	}	
+	session.Files = files_list
+	tpl.ExecuteTemplate(response, "files.html", session)*/
+	
+}
+
+
+func filehelper(response http.ResponseWriter, request *http.Request) {
+	var user User
+	var session Session
+	ctx := appengine.NewContext(request)
+	item, session_id, err := getSession(request)
+	json.Unmarshal(item.Value, &user)
+	session.User = user
+	session.Session_id = session_id
+
+	if err != nil{
+		//no session found
+		log.Errorf(ctx, "*** Error Debug: In files, user is impossible to find: %v ***", err)
+		logout(response, request)
+	}
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		log.Errorf(ctx, "*** Error Debug: In files, storage.NewClient: %s", err)
+		session.Message = "Oooops! Something went wrong try again"
+		tpl.ExecuteTemplate(response, "files.html", session)
+		return
+	}
+	defer client.Close()
+
+	query := &storage.Query{ Prefix:  strconv.Itoa(int(user.Id)) + "/" }
+	objs, _ := client.Bucket(gcsBucket).List(ctx, query)
+
+	if request.Method == "GET" {
+		var files_list  []File
+		for _, obj := range objs.Results {
+			fileName := strings.TrimPrefix(obj.Name, strconv.Itoa(int(user.Id)) + "/")
+			file := File{
+				Name: fileName,
+				Source_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + strconv.Itoa(int(user.Id)) + "/" + fileName,
+				Download_Link: obj.MediaLink,
+			}
+			files_list = append(files_list, file)
+		}
+		
+		err = json.NewEncoder(response).Encode(files_list)	
+	}
+
+	if request.Method == "DELETE" {
+		filename := request.FormValue("filename")
+		err = client.Bucket(gcsBucket).Object( strconv.Itoa(int(user.Id)) + "/" + filename).Delete(ctx)
+		if err != nil {
+			log.Errorf(ctx, "*** Error Debug: In filehelper, Delete: %s", err)
+		}
+		io.WriteString(response, "done")
+	}
+}
 //go get github.com/gorilla/mux
 //the session_id == uuid == cookie.Value is being passed in the url res]

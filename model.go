@@ -14,6 +14,7 @@ type Session struct {
 	ToDos   []ToDo
 	Message string
 	Session_id string
+	Files      []File
 }
 
 
@@ -24,4 +25,11 @@ type ToDo struct {
 	Date    string
 	Photo_Link   string
 	Photo_Media  string
+}
+
+
+type File struct{
+	Name string
+	Source_Link string
+	Download_Link string
 }
