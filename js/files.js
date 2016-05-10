@@ -71,6 +71,9 @@ function showFiles(){
 			figure.appendChild(figcaption)
 			file_list.appendChild(figure)
 		}
+		else{
+			file_list.innerHTML = "No Files";
+		}
 }
 
 

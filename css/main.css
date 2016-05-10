@@ -104,7 +104,7 @@ header {
     /* expand the element logo to fill width
     along primary axis ( horizontally ) */
     /* also seperates logo with hamburger menu, signin form */
-    flex-grow: 1;
+    flex-grow: 2;
 
     /* font styling */
     color: #333;
@@ -120,7 +120,8 @@ header {
 
 
 #logo a{
-        color: black;
+    color: black;
+    width: 100px;
 }
 
 
@@ -424,4 +425,28 @@ footer p a:hover{
 .close:hover { 
     cursor: pointer;
     background: #0ebfe9; 
+}
+
+
+form {
+    border:1px solid gray;
+    display:inline-block;
+    border-radius: 5px;
+    background-color:white;
+}
+
+#search-box {
+    background-color: white;
+    border:0;
+}
+
+
+#search-submit{
+    background-color:transparent;
+    border:0;
+    cursor: pointer;
+}
+
+#search-submit:hover {
+    color: #0ebfe9;
 }

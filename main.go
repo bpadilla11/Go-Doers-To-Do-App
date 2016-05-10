@@ -15,7 +15,6 @@ import (
 	"strings"	
 	"io"
 	"google.golang.org/appengine/urlfetch"
-	"fmt"
 )
 
 const gcsBucket = "todolist-1292.appspot.com"
@@ -35,7 +34,7 @@ func init() {
 	r.HandleFunc("/register", register)
 	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/files", files)
-	r.HandleFunc("/gifs", gifHandler)
+	r.HandleFunc("/pictures", pictures)
 
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
@@ -443,38 +442,54 @@ func filehelper(response http.ResponseWriter, request *http.Request) {
 //go get github.com/gorilla/mux
 //the session_id == uuid == cookie.Value is being passed in the url res]
 
-func gifHandler(res http.ResponseWriter, req *http.Request) {
-	ctx := appengine.NewContext(req)
+func pictures(response http.ResponseWriter, request *http.Request) {
+	ctx := appengine.NewContext(request)
+	var session Session
+	var user User
 
-	t := req.FormValue("term")
-	if t == "" {
-		t = "rocket+league"
-	}
-
-
-	client := urlfetch.Client(ctx)
-	result, err := client.Get("http://api.giphy.com/v1/gifs/search?q=" + t + "&api_key=dc6zaTOxFJmzC")
-	if err != nil {
-		http.Error(res, err.Error(), 500)
-		return
-	}
-	defer result.Body.Close()
-
-	var obj struct {
-		Data []struct {
-			URL string ""
-			Images struct {
-				Original struct {
-					URL string
-				}
+	var v struct {
+		S Session
+		Obj struct {
+			TotalHits int
+			Hits []struct {
+				PageURL string
+				PreviewURL string 
+				WebFormatURL string
 			}
 		}
 	}
-	err = json.NewDecoder(result.Body).Decode(&obj)
-	if err != nil {
-		http.Error(res, err.Error(), 500)
-		return
+
+	item, session_id, err := getSession(request)
+	json.Unmarshal(item.Value, &user)
+	session.User = user
+	session.Session_id = session_id
+
+	if err != nil{
+		//no session found
+		log.Errorf(ctx, "*** Error Debug: In files, user is impossible to find: %v ***", err)
+		logout(response, request)
 	}
-	img := obj.Data[1] 
-	fmt.Fprintf(res, `<a href="%v"></a><img src="%v"><br>`, img.URL, img.Images.Original.URL)
+
+	v.S = session
+
+	if request.Method == "POST" {
+		t := request.FormValue("search")
+		if t != "" {
+			client := urlfetch.Client(ctx)
+			result, err := client.Get("http://pixabay.com/api/?key=2538329-f277a3fe3c3d6e390705982a7&q=" + t + "&image_type=photo")
+			if err != nil {
+				http.Error(response, err.Error(), 500)
+				return
+			}
+			defer result.Body.Close()
+
+			err = json.NewDecoder(result.Body).Decode(&v.Obj)
+			if err != nil {
+				http.Error(response, err.Error(), 500)
+				return
+			}
+		}
+	}
+
+	tpl.ExecuteTemplate(response, "pictures.html", v)
 }

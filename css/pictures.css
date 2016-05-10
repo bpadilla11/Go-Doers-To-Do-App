@@ -1,0 +1,22 @@
+a {
+    text-decoration: none;
+}
+
+#api-list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+}
+
+figure *{
+    width: 300px;
+}
+
+p{
+    text-align: center;
+}
+
+#center-content {
+	background-color: white;
+}

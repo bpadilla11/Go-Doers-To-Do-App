@@ -12,6 +12,7 @@
         <link rel="stylesheet" media="screen and (max-width: 768px)" href="../css/mq_768-less.css">
         <!-- this is applied when width > 768px -->
         <link rel="stylesheet" media="screen and (min-width: 769px)" href="../css/mq_768-plus.css">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
     </head>
 
     <body>
@@ -22,6 +23,12 @@
                 <div id="navbar">
                     <div id="logo"><a href="/dashboard?id={{.Session_id}}" >Go-Doers</a></div>
                     <div class="nd">
+                        <form method="POST" action="/pictures?={{.Session_id}}">
+                            <span>
+                                <input id="search-box" type="text" name="search" autocomplete="off" placeholder="Search...">
+                                <button id="search-submit" class="fa fa-search" type="submit"></button>
+                            </span>
+                        </form>
                         <a class="btn" href="/profile?id={{.Session_id}}">{{.User.Email}}</a>
                         <a class="btn" href="/files?id={{.Session_id}}">My Photos</a>
                         <a class="btn" href="/logout">Logout</a>
@@ -30,11 +37,17 @@
                 </div>
                 <!-- dropdown-form display MUST be none -->
                 <div id="dropdown-form"  style="display: none;">
-                    <form class="nm">
+                    <div class="nm">
+                        <form method="POST" action="/pictures?={{.Session_id}}">
+                            <span>
+                                <input id="search-box" type="text" name="search" autocomplete="off" placeholder="Search...">
+                                <button id="search-submit" class="fa fa-search" type="submit"></button>
+                            </span>
+                        </form>
                         <a class="btn" href="/profile">{{.User.Email}}</button>
                         <a class="btn" href="/files?id={{.Session_id}}">My Photos</a>
                         <a class="btn" href="/logout">Logout</a>
-                    </form>
+                    </div>
                 </div>
                 <div id="login_status_modal" class="modalDialog">
                     <div>

@@ -3,6 +3,10 @@
 	display: flex;
 }
 
+.nm {
+	display: flex;
+	flex-direction: column;
+}
 
 .btf-content{
     flex-direction: row;
@@ -15,3 +19,6 @@
 }
 
 
+#search-box {
+    width: 90%;
+}
