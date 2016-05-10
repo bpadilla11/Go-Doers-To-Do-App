@@ -14,6 +14,8 @@ import (
 	"strconv"
 	"strings"	
 	"io"
+	"google.golang.org/appengine/urlfetch"
+	"fmt"
 )
 
 const gcsBucket = "todolist-1292.appspot.com"
@@ -33,6 +35,7 @@ func init() {
 	r.HandleFunc("/register", register)
 	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/files", files)
+	r.HandleFunc("/gifs", gifHandler)
 
 	//ajax requests
 	r.HandleFunc("/api/email_check", email_check)
@@ -439,3 +442,39 @@ func filehelper(response http.ResponseWriter, request *http.Request) {
 }
 //go get github.com/gorilla/mux
 //the session_id == uuid == cookie.Value is being passed in the url res]
+
+func gifHandler(res http.ResponseWriter, req *http.Request) {
+	ctx := appengine.NewContext(req)
+
+	t := req.FormValue("term")
+	if t == "" {
+		t = "rocket+league"
+	}
+
+
+	client := urlfetch.Client(ctx)
+	result, err := client.Get("http://api.giphy.com/v1/gifs/search?q=" + t + "&api_key=dc6zaTOxFJmzC")
+	if err != nil {
+		http.Error(res, err.Error(), 500)
+		return
+	}
+	defer result.Body.Close()
+
+	var obj struct {
+		Data []struct {
+			URL string ""
+			Images struct {
+				Original struct {
+					URL string
+				}
+			}
+		}
+	}
+	err = json.NewDecoder(result.Body).Decode(&obj)
+	if err != nil {
+		http.Error(res, err.Error(), 500)
+		return
+	}
+	img := obj.Data[1] 
+	fmt.Fprintf(res, `<a href="%v"></a><img src="%v"><br>`, img.URL, img.Images.Original.URL)
+}
