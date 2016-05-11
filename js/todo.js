@@ -1,8 +1,14 @@
 var todo_content = document.querySelector("#todo-content");
 var todo_image = document.querySelector("#todo-image");
-var todo_list = document.querySelector("#todo-list");
+var todo_list_all = document.querySelector("#todo-list-all");
+var todo_list_queued = document.querySelector("#todo-list-queued");
+var todo_list_done = document.querySelector("#todo-list-done");
 var todo_submit = document.querySelector("#todo-submit");
 var todo_form = document.querySelector("#todo-form");
+
+var all = document.querySelector("#all");
+var queued = document.querySelector("#queued");
+var done = document.querySelector("#done");
 
 var Todos = [];
 
@@ -36,43 +42,85 @@ getTodos();
 </div>
 */
 function showTodos(){
-	todo_list.innerHTML = "";
-	for(var i = 0; i < Todos.length; i++) {
+	todo_list_all.innerHTML = "";
+	todo_list_queued.innerHTML = "";
+	todo_list_done.innerHTML = "";
+	for(var i = 0; i < Todos.length; i++) {	
+		todo_list_all.appendChild(createTodo(Todos[i]));
+		if(Todos[i].Status == "queued"){
+			todo_list_queued.appendChild(createTodo(Todos[i]));
+			
+		}
+		else if(Todos[i].Status == "done"){
+			todo_list_done.appendChild(createTodo(Todos[i]));
+		}
+
+	}
+}
+
+function createTodo(Todos){
 		var p = document.createElement("p");
 		var div = document.createElement("div");
 		var img = document.createElement("img");
 		var img_a = document.createElement("a");
-		var a_delete = document.createElement("a");
+		var a_delete = document.createElement("button");
 		var time  = document.createElement("p");
+		var status = document.createElement("button");
 
-		a_delete.setAttribute("href", "#");
+		if(Todos.Status == "done")
+			status.className = "fa fa-check-circle status status-done";
+		else
+			status.className = "fa fa-check-circle status";
+		status.id = Todos.ToDoId;
+		status.addEventListener('click', function (e) {
+			var id = e.target.id;
+			var xhr = new XMLHttpRequest();
+        	xhr.open("UPDATE", "/todo?todo="+id);
+        	xhr.send(null);
+        	xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                setTimeout(getTodos, 100);
+            }
+        }
+		});
+
 		a_delete.className = "delete";
 		a_delete.innerHTML = "X";
-		a_delete.id = Todos[i].ToDoId;
+		a_delete.id = Todos.ToDoId;
+		a_delete.addEventListener('click', function (e) {
+			var id = e.target.id;
+			var xhr = new XMLHttpRequest();
+        	xhr.open("DELETE", "/todo?todo="+id);
+        	xhr.send(null);
+        	xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                setTimeout(getTodos, 100);
+            }
+        }
+		});
 
-		img_a.setAttribute("href", Todos[i].Photo_Link);
+		img_a.setAttribute("href", Todos.Photo_Link);
 		img_a.setAttribute("target", "_blank");
 
-		img.setAttribute("src", Todos[i].Photo_Media);
+		img.setAttribute("src", Todos.Photo_Media);
 		img.className = "todo-photo";
 		img_a.appendChild(img);
 
 
-		p.innerHTML = Todos[i].Content;
+		p.innerHTML = Todos.Content;
 
-		time.innerHTML = Todos[i].Date;
+		time.innerHTML = Todos.Date;
 		time.className = "time";
 
+		div.appendChild(status);
 		div.appendChild(a_delete);
 		div.appendChild(p);
-		if(Todos[i].Photo_Media != "")
+		if(Todos.Photo_Media != "")
 			div.appendChild(img_a);
 		div.appendChild(time);
 		div.className = "todo-style";
-		todo_list.appendChild(div);
-	}
+		return div
 }
-
 
 //to add a todo object
 todo_submit.addEventListener('click', function (e) {
@@ -104,18 +152,32 @@ todo_submit.addEventListener('click', function (e) {
 });
 
 
-//delete object from the server
-(function () {
-    todo_list.addEventListener("click", function (evt) {
-        var id = evt.target.id;
-        var xhr = new XMLHttpRequest();
-		var xhr = new XMLHttpRequest();
-        xhr.open("DELETE", "/todo?todo="+id);
-        xhr.send(null);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                setTimeout(getTodos, 100);
-            }
-        };          
-    }, false);
-})();
+all.addEventListener('click', function (e) {
+	all.className = "active";
+	queued.className = "";
+	done.className = "";
+    showTodos();
+    todo_list_all.className = "todo-list";
+    todo_list_queued.className = "";
+    todo_list_done.className = "";
+});
+
+queued.addEventListener('click', function (e) {
+	all.className = "";
+	queued.className = "active";
+	done.className = "";
+	showTodos();
+    todo_list_all.className = "";
+    todo_list_queued.className = "todo-list";
+    todo_list_done.className = "";
+});
+
+done.addEventListener('click', function (e) {
+	all.className = "";
+	queued.className = "";
+	done.className = "active";
+	showTodos();
+    todo_list_all.className = "";
+    todo_list_queued.className = "";
+    todo_list_done.className = "todo-list";
+});

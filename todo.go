@@ -54,7 +54,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			if err == datastore.Done {
 				break
 			} else if err != nil {
-				log.Errorf(ctx, "*** Error Debug: In dashboard, retrieving todos: %v ***", err)
+				log.Errorf(ctx, "*** Error Debug: In todos, retrieving todos: %v ***", err)
 				http.Error(response, err.Error(), 500)
 				return
 			}
@@ -66,7 +66,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 		//convert todos list to json and pass it to todo.js so it can be rendered to the browser
 		err = json.NewEncoder(response).Encode(todos)
 		if err != nil {
-			log.Errorf(ctx, "*** Error Debug: In dashboard, jsonifying? todos: %v ***", err)
+			log.Errorf(ctx, "*** Error Debug: In todos, jsonifying? todos: %v ***", err)
 			return
 		}
 	}
@@ -86,7 +86,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			ext := hdr.Filename[strings.LastIndex(hdr.Filename, ".")+1:]
 			log.Infof(ctx, ext)
 			if ext != "png" && ext != "jpg" && ext != "jpeg" {
-				log.Infof(ctx, "*** Error Info: In dashboard, we only accept .jpeg, .jpg or .png files ***")
+				log.Infof(ctx, "*** Error Info: In todo, we only accept .jpeg, .jpg or .png files ***")
 				session.Message = "Only files with extensions .jpeg, .jpg or .png files are accepted"
 					
 				//if the uploaded file is not jpg, jpeg or png then notify the todo.js
@@ -95,6 +95,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 				todo := ToDo{
 					UserId:  0, 
 					Content: "",
+					Status:  queued,
 					Photo_Link: "invalid",
 					Photo_Media:"invalid", 
 				}
@@ -125,7 +126,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			io.Copy(writer, src) //copy the contents of the file to the object handle effectively saving it to gcs
 			err = writer.Close()
 			if err != nil {
-				log.Errorf(ctx, "*** Error Debug: In dashboard, writer.Close: %s", err)
+				log.Errorf(ctx, "*** Error Debug: In todo, writer.Close: %s", err)
 				session.Message = "Oooops! Something went wrong try again"
 				//tpl.ExecuteTemplate(response, "dash.html", session)
 				return
@@ -146,6 +147,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 			todo := ToDo{
 				UserId:  user.Id, 
 				Content: content,
+				Status:  queued,
 				Date: time.Now().Format("Mon Jan 2 2006 03:04 PM"),
 				Photo_Link: "https://storage.googleapis.com/" + gcsBucket + "/" + fileName,
 				Photo_Media: s,
@@ -162,6 +164,7 @@ func todo(response http.ResponseWriter, request *http.Request) {
 		todo := ToDo{
 				UserId:  user.Id, 
 				Content: content,
+				Status:  queued,
 				Date: time.Now().Format("Mon Jan 2 2006 03:04 PM"),
 				Photo_Link:   "",
 				Photo_Media:  "",
@@ -191,4 +194,20 @@ func todo(response http.ResponseWriter, request *http.Request) {
 		io.WriteString(response, "done")
 	}
 
+	if request.Method == "UPDATE" {
+		var todo ToDo
+		todo_id, _ := strconv.ParseInt(request.FormValue("todo"), 10, 64)
+
+		//get the todo object from datastore
+		key := datastore.NewKey(ctx, "Todos", "", todo_id, nil)
+		datastore.Get(ctx, key, &todo)
+		if todo.Status == queued {
+			todo.Status = done
+		} else{
+			todo.Status = queued
+		}
+		datastore.Put(ctx, key, &todo)
+		//pass any string here
+		io.WriteString(response, "done")
+	}
 }

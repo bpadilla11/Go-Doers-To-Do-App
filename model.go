@@ -1,5 +1,11 @@
 package GodoersToDo
 
+const (
+	queued = "queued"
+	done = "done"
+)
+
+
 type User struct {
 	Id        int64
 	FirstName string
@@ -22,6 +28,7 @@ type ToDo struct {
 	ToDoId  int64
 	UserId  int64
 	Content string
+	Status  string
 	Date    string
 	Photo_Link   string
 	Photo_Media  string
