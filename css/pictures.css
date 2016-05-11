@@ -7,6 +7,8 @@ a {
     flex-wrap: wrap;
     width: 100%;
     align-items: center;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 figure *{

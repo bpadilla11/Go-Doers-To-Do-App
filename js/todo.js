@@ -68,9 +68,9 @@ function createTodo(Todos){
 		var status = document.createElement("button");
 
 		if(Todos.Status == "done")
-			status.className = "fa fa-check-circle status status-done";
+			status.className = "fa fa-check-square status status-done";
 		else
-			status.className = "fa fa-check-circle status";
+			status.className = "fa fa-check-square status";
 		status.id = Todos.ToDoId;
 		status.addEventListener('click', function (e) {
 			var id = e.target.id;
