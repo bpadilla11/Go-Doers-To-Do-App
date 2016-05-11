@@ -23,7 +23,7 @@
                 <div id="navbar">
                     <div id="logo"><a href="/dashboard?id={{.Session_id}}" >Go-Doers</a></div>
                     <div class="nd">
-                        <form method="POST" action="/pictures?={{.Session_id}}">
+                        <form class="search-box-form" method="POST" action="/pictures?={{.Session_id}}">
                             <span>
                                 <input id="search-box" type="text" name="search" autocomplete="off" placeholder="Search...">
                                 <button id="search-submit" class="fa fa-search" type="submit"></button>
@@ -41,7 +41,7 @@
                      dropdown-form can only be accessed if the screen width is below 800px -->
                  <div id="dropdown-form" style="display: none;">
                     <div class="nm">
-                        <form method="POST" action="/pictures?={{.Session_id}}">
+                        <form class="search-box-form" method="POST" action="/pictures?={{.Session_id}}">
                             <span>
                                 <input id="search-box" type="text" name="search" autocomplete="off" placeholder="Search...">
                                 <button id="search-submit" class="fa fa-search" type="submit"></button>

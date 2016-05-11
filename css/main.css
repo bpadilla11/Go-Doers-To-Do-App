@@ -428,13 +428,6 @@ footer p a:hover{
 }
 
 
-form {
-    border:1px solid gray;
-    display:inline-block;
-    border-radius: 5px;
-    background-color:white;
-}
-
 #search-box {
     background-color: white;
     border:0;
@@ -449,4 +442,16 @@ form {
 
 #search-submit:hover {
     color: #0ebfe9;
+}
+
+.search-box-form {
+    border:1px solid gray;
+    display:inline-block;
+    border-radius: 5px;
+    background-color:white;
+}
+
+span {
+    display: flex;
+    flex-wrap: nowrap;
 }
