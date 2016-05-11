@@ -54,7 +54,6 @@ function showTodos(){
 		else if(Todos[i].Status == "done"){
 			todo_list_done.appendChild(createTodo(Todos[i]));
 		}
-
 	}
 }
 
