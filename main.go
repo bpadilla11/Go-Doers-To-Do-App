@@ -474,9 +474,18 @@ func pictures(response http.ResponseWriter, request *http.Request) {
 
 	if request.Method == "POST" {
 		t := request.FormValue("search")
+		ts := strings.Split(t, " ")
+		term := ""
+		for i := 0; i < len(ts); i++ {
+			if i == len(ts){
+				term += ts[i]
+			} else{
+				term += ts[i] + "+"
+			}
+		}
 		if t != "" {
 			client := urlfetch.Client(ctx)
-			result, err := client.Get("http://pixabay.com/api/?key=2538329-f277a3fe3c3d6e390705982a7&q=" + t + "&image_type=photo")
+			result, err := client.Get("http://pixabay.com/api/?key=2538329-f277a3fe3c3d6e390705982a7&q=" + term + "&image_type=photo")
 			if err != nil {
 				http.Error(response, err.Error(), 500)
 				return
